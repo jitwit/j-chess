@@ -57,17 +57,6 @@ pos_of =: 3 : 0
 fen =: fen_of :. pos_of
 
 NB. algebraic notation
-NB. have a target square, figure out which piece could have gone there.
-NB. if pawn then none of NBRQK is present.
-NB. promotion something back rank = Q (say), ie, e8=Q
-NB. check is + checkmate is #
-
-NB. k moves (nb includes o-o and o-o-o)  => no castle rights
-NB. rook moves, that side loses rights (a => -q, h => -k)
-
-NB. have target square, reverse engineer piece from neighborhood
-NB. works for everything except pawns.
-
 NB. roughly:
 NB. piece = N | B | R | Q | K
 NB. file = a | b | c | d | e | f | g | h
@@ -77,7 +66,7 @@ NB. check = +
 NB. checkmate = #
 NB. kingattack = check | checkmate
 NB. square = file rank
-NB. promotion = square '=' piece
+NB. promotion = square '=' piece kingattack?
 NB. castle = (O-O | O-O-O) kingattack?
 NB. move = (piece? file? rank? capture? square kingattack?) | castle | promotion
 
@@ -88,8 +77,9 @@ maskf =: (8 8 $ i.8) = ({.coords)&i.
 maskr =: (8 $"0 i.8) = ({:coords)&i.
 maskc =: maskr`maskf@.(e.&'abcdefgh')
 
+NB. have a target square, figure out which piece can get there.
 maskfrom =: 3 : 0
-NB. where did the piece possibly come from?
+ NB. where can the piece come from when going to move y?
  msk =. (i. 8 8) = 8 #. square d =. _2 {. z =. y -. pieces,'x+#='
  p =. piece y  NB. pawn = 0, so if. works
  if. p do. ,:~ (*/maskc _2}.z) * +./ (p{::NHOOD)|.!.0 msk
@@ -113,6 +103,10 @@ castlek =: 3 : 0
 )
 
 NB. (!) still need to do promotion, castling rights outside of castling
+NB. k moves (nb includes o-o and o-o-o)  => no castle rights
+NB. rook moves, that side loses rights (a => -q, h => -k)
+NB. to see if pawn move, none of NBRQK is present.
+
 san =: 4 : 0
  NB. produces resulting position with arguments x as move in SAN, y as
  NB. position in J representation.
@@ -135,5 +129,6 @@ san =: 4 : 0
   brd1;(-.bw);oo;ep;hm;fm
  end.
 )
+
 NB. will take pgn and produce all states of a game
 NB. ,. (#~ [: * 3 | i.@#) <;._1 ' ',pgn0
