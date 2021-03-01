@@ -3,6 +3,10 @@ load 'chess.ijs stats/bonsai'
 fendfen =: ]&.(fen^:_1)
 checkfen =: -: fendfen
 
+pgn0 =: 0 : 0
+1. e4 d6 2. f4 Nf6 3. Nf3 Nxe4 4. Bc4 e6 5. O-O g6 6. d3 Nc5 7. a3 Bg7 8. c3 a6 9. d4 Ne4 10. Nbd2 Nxd2 11. Bxd2 O-O 12. Ng5 b5 13. Ba2 Nc6 14. Qf3 Bb7 15. Qh3 h6 16. Nf3 e5 17. fxe5 dxe5 18. Bxh6 exd4 19. Bxg7 Kxg7 20. Nxd4 Nxd4 21. cxd4 Qxd4+ 22. Kh1 Qxb2 23. Qd7 Qxg2# 0-1
+)
+
 demos =: 0 : 0
 <"1 ,~"0/~/ coords NB. boxed coordinates
 )
@@ -31,5 +35,16 @@ NB. check that e8 is black king and b1 is white knight
 'N' -: (<square 'b1') { print 0 {:: start
 )
 
+NB. fen start
+NB. fen 'e4' san start
+NB. fen 'd5' san 'e4' san start
+NB. fen 'exd5' san 'd5' san 'e4' san start
+
+NB. fen start
+NB. fen 'e4' san start
+NB. fen 'c5' san 'e4' san start
+NB. fen 'Nf3' san 'c5' san 'e4' san start
+
 0!:1 demos
 0!:2 cases
+NB. |. |."1 <"1 ,~"0/~/ coords
