@@ -101,8 +101,15 @@ castlek =: 3 : 0
  brd =. ((maskto k),:rm)((<bw,IK),(<bw,IR))}brd
  brd;(-.bw);oo;ep;(hm+1);(fm+-.bw)
 )
-
-NB. (!) still need to do promotion, castling rights outside of castling
+NB. negative |. for white, positive for black
+dirq =: -@:<:@:+:
+promote =: 4 : 0
+ 'brd bw oo ep hm fm' =. y
+ p =. ((<bw,IP) { brd) ~: (dirq bw) |.!.0 q =. maskto 2 {. x
+ brd =. (p ,: q) ((<bw,IP),(<bw,(piece {:x)))}brd
+ brd;(-.bw);oo;8;0;fm+-.bw
+)
+NB. (!) still need to do castling rights outside of castling
 NB. k moves (nb includes o-o and o-o-o)  => no castle rights
 NB. rook moves, that side loses rights (a => -q, h => -k)
 NB. to see if pawn move, none of NBRQK is present.
@@ -110,8 +117,9 @@ NB. to see if pawn move, none of NBRQK is present.
 san =: 4 : 0
  NB. produces resulting position with arguments x as move in SAN, y as
  NB. position in J representation.
- if. x -: 'O-O'       do. castlek y
- elseif. x -: 'O-O-O' do. castleq y
+ if. 'O-O-O' -: 5{.x   do. castleq y NB. {. to avoid possible +/#
+ elseif. 'O-O' -: 3{.x do. castlek y
+ elseif. '=' e. x      do. x promote y
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
   NB. make sure it's most forward pawn by scanning in different
   NB. directions for each color. (> and \. for black, < and \ for
