@@ -117,8 +117,8 @@ san =: 4 : 0
   NB. make sure it's most forward pawn by scanning in different
   NB. directions for each color. (> and \. for black, < and \ for
   NB. white)
-  if. bw do. clr =. (</\ @: (+./\)) (+./ p {"_1 brd) * bw { maskfrom x
-  else. clr =. (>/\. @: (+./\.)) (+./ p {"_1 brd) * bw { maskfrom x end.
+  if. bw do. clr =. (</\@:(+./\))^:(0=p) (+./p{"_1 brd) * bw{maskfrom x
+  else. clr =. (>/\.@:(+./\.))^:(0=p) (+./p{"_1 brd) * bw{maskfrom x end.
   clr =. clr + to =. maskto x
   to =. ,:~ (p=i.6) */ to
   brd1 =. ((bw=i.2) * to) + (-.clr) *"2 brd
