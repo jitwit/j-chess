@@ -51,7 +51,8 @@ fen_of =: 3 : 0
 
 pos_of =: 3 : 0
  'brd bw oo ep hm fm' =. <;._1 ' ',y
- (dfen brd);(bw='w');('KQkq'e.oo);({:(square :: 8:)ep);hm;&".fm
+ NB. careful that bw isn't array?
+ (dfen brd);('w'={.bw);('KQkq'e.oo);({:(square :: 8:)ep);hm;&".fm
 )
 
 fen =: fen_of :. pos_of
@@ -66,12 +67,13 @@ NB. check = +
 NB. checkmate = #
 NB. kingattack = check | checkmate
 NB. square = file rank
-NB. promotion = square '=' piece kingattack?
+NB. promotion = '='
 NB. castle = (O-O | O-O-O) kingattack?
-NB. move = (piece? file? rank? capture? square kingattack?) | castle | promotion
+NB. move = (piece? file? rank? capture? square (promotion piece)? kingattack?)
+NB.      | castle
 
 piece =: [: (* 6&~:) (6}.pieces) i. {.
-movesto =: _2 {. -.&'+#'
+movesto =: _2 {. -.&(pieces,'+#=')
 maskto =: (i. 8 8) = 8 #. square @: movesto
 maskf =: (8 8 $ i.8) = ({.coords)&i.
 maskr =: (8 $"0 i.8) = ({:coords)&i.
@@ -101,25 +103,16 @@ castlek =: 3 : 0
  brd =. ((maskto k),:rm)((<bw,IK),(<bw,IR))}brd
  brd;(-.bw);oo;ep;(hm+1);(fm+-.bw)
 )
-NB. negative |. for white, positive for black
-dirq =: -@:<:@:+:
-promote =: 4 : 0
- 'brd bw oo ep hm fm' =. y
- p =. ((<bw,IP) { brd) ~: (dirq bw) |.!.0 q =. maskto 2 {. x
- brd =. (p ,: q) ((<bw,IP),(<bw,(piece {:x)))}brd
- brd;(-.bw);oo;8;0;fm+-.bw
-)
+
 NB. (!) still need to do castling rights outside of castling
 NB. k moves (nb includes o-o and o-o-o)  => no castle rights
 NB. rook moves, that side loses rights (a => -q, h => -k)
 NB. to see if pawn move, none of NBRQK is present.
-
 san =: 4 : 0
  NB. produces resulting position with arguments x as move in SAN, y as
  NB. position in J representation.
  if. 'O-O-O' -: 5{.x   do. castleq y NB. {. to avoid possible +/#
  elseif. 'O-O' -: 3{.x do. castlek y
- elseif. '=' e. x      do. x promote y
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
   NB. make sure it's most forward pawn by scanning in different
   NB. directions for each color. (> and \. for black, < and \ for
@@ -129,7 +122,9 @@ san =: 4 : 0
   clr =. clr + to =. maskto x
   to =. ,:~ (p=i.6) */ to
   brd1 =. ((bw=i.2) * to) + (-.clr) *"2 brd
-  NB. for en passant
+  if. '=' e. x  NB. promotion  
+  do. brd1=.(maskto x)(<bw,piece{:x-.'+#x')}(-.pr=.maskto x)*"2 brd1 end.
+  NB. en passant
   epr =. I. +/"1 epb =. | +/ IP {"_1 brd1 - brd
   if. (-.p) *. (2=-~/epr) *. (*#epr) do. ep =. >./ I. epb else. ep =. 8 end.
   NB. half moves/full moves
