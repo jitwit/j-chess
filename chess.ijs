@@ -104,10 +104,6 @@ castlek =: 3 : 0
  brd;(-.bw);oo;ep;(hm+1);(fm+-.bw)
 )
 
-NB. (!) still need to do castling rights outside of castling
-NB. k moves (nb includes o-o and o-o-o)  => no castle rights
-NB. rook moves, that side loses rights (a => -q, h => -k)
-NB. to see if pawn move, none of NBRQK is present.
 san =: 4 : 0
  NB. produces resulting position with arguments x as move in SAN, y as
  NB. position in J representation.
@@ -125,7 +121,11 @@ san =: 4 : 0
   if. '=' e. x  NB. promotion  
   do. brd1=.(maskto x)(<bw,piece{:x-.'+#x')}(-.pr=.maskto x)*"2 brd1 end.
   NB. en passant
-  epr =. I. +/"1 epb =. | +/ IP {"_1 brd1 - brd
+  epr =. I. +/"1 epb =. | +/ IP {"_1 diff =. brd1 - brd
+  NB. castling rights
+  echo < +./^:2 | brd1
+  echo (_2 <@square\ 'a1e1h1a8e8h8') { +./^:2 | diff
+  oo =. oo * -.,_3 (2+./\])\ (_2 <@square\ 'a1e1h1a8e8h8') { +./^:2 | diff
   if. (-.p) *. (2=-~/epr) *. (*#epr) do. ep =. >./ I. epb else. ep =. 8 end.
   NB. half moves/full moves
   fm =. fm+-.bw [ hm =. (hm+1) * -. (-.({.x)e.pieces) +. ('x'e.x)
@@ -135,3 +135,6 @@ san =: 4 : 0
 
 NB. will take pgn and produce all states of a game
 NB. ,. (#~ [: * 3 | i.@#) <;._1 ' ',pgn0
+NB. queen rook also getting deleted... right because disambiguation trick doesn't work when pieces are in between...
+fen 'Rg1' san fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
+'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK1R1 b Qkq - 1 4'
