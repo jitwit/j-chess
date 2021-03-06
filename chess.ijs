@@ -135,9 +135,10 @@ san =: 4 : 0
   NB. directions for each color. (\ for white, \. for black (needs to
   NB. work under |. because base case is 1 which leads to alternating
   NB. pattern otherwise)
-  if. bw do. clr =. (</\@:(+./\))^:(0=p) (+./p{"_1 brd) * bw{maskfrom x
-  else. clr =. ((</\&.:|.)@:(+./\.))^:(0=p) (+./p{"_1 brd) * bw{maskfrom x end.
+  if. bw do. clr =. (</\@:(+./\))^:(0=p) (bw{p{"_1 brd) * bw{maskfrom x
+  else. clr =. ((</\&.:|.)@:(+./\.))^:(0=p) (bw{p{"_1 brd) * bw{maskfrom x end.
   to =. maskto x
+NB.  echo (p{"_1 brd) ; bw { maskfrom x
   if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
   clr =. clr + to
   to =. ,:~ (p=i.6) */ to
@@ -180,5 +181,7 @@ fens_of_pgn0 =: 4 : 0
  end.
 )
 
-dep =. 22
+NB. 12, 22, 43 have been issues, add them as test cases
+NB. first two from presence of b, last something queen.
+dep =. 44
 |. {{ <"0 print 0 {:: y }} &.> _2 {. dep fens_of_pgn0 egpgn
