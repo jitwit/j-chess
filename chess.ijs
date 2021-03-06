@@ -104,6 +104,24 @@ castlek =: 3 : 0
  brd;(-.bw);oo;ep;(hm+1);(fm+-.bw)
 )
 
+NB. take board, masks, figure out which piece it really must be.
+NB. issues include pieces in way, pieces one in front of other.
+NB. should mostly be issue with rooks, but can happen from promotions
+NB. as well. pawn issues are handled by scans, though maybe that
+NB. should move here as well. this issue can't happen with knights
+NB. because they hop.
+disamb =: 3 : 0
+ 'brd clr to' =. y
+ pcs =. +./^:2 brd
+ z_t =. {.4$.$.to NB. only 1 square here
+ z_s =. 4$.$.clr
+ tab =. z_t -"1/~ z_s
+ mag =. >./"1 | tab
+ dir =. * tab
+ src =. z_s #~ 1 = dir ([: +/ pcs {~ [: <"1 z_t +"1 (1+i.@]) */ [)"1 0 mag
+ (i.8 8) = 8 #. {.src
+)
+
 san =: 4 : 0
  NB. produces resulting position with arguments x as move in SAN, y as
  NB. position in J representation.
@@ -117,7 +135,8 @@ san =: 4 : 0
   if. bw do. clr =. (</\@:(+./\))^:(0=p) (+./p{"_1 brd) * bw{maskfrom x
   else. clr =. ((</\&.:|.)@:(+./\.))^:(0=p) (+./p{"_1 brd) * bw{maskfrom x end.
   to =. maskto x
-  echo clr;to
+  if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
+NB.  echo clr;to
   clr =. clr + to
   to =. ,:~ (p=i.6) */ to
   brd1 =. ((bw=i.2) * to) + (-.clr) *"2 brd
@@ -126,10 +145,7 @@ san =: 4 : 0
   NB. en passant
   epr =. I. +/"1 epb =. | +/ IP {"_1 diff =. brd1 - brd
   NB. castling rights
-
-NB.  echo < +./^:2 | brd1
-NB.  echo (_2 <@square\ 'a1e1h1a8e8h8') { +./^:2 | diff
-  oo =. oo * -.,_3 (2+./\])\ (_2 <@square\ 'a1e1h1a8e8h8') { +./^:2 | diff
+  oo =. oo * -.,_3 (2+./\])\ (_2 <@square\ 'h1e1a1h8e8a8') { +./^:2 | diff
   if. (-.p) *. (2=-~/epr) *. (*#epr) do. ep =. >./ I. epb else. ep =. 8 end.
   NB. half moves/full moves
   fm =. fm+-.bw [ hm =. (hm+1) * -. (-.({.x)e.pieces) +. ('x'e.x)
@@ -140,13 +156,11 @@ NB.  echo (_2 <@square\ 'a1e1h1a8e8h8') { +./^:2 | diff
 NB. will take pgn and produce all states of a game
 NB. ,. (#~ [: * 3 | i.@#) <;._1 ' ',pgn0
 NB. queen rook also getting deleted... right because disambiguation trick doesn't work when pieces are in between...
-fen 'Rg1' san fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
+
 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK1R1 b Qkq - 1 4'
 
-print 0 {:: fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
 print 0 {:: 'Rg1' san fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
 
 NB. to fix disambiguation: take possible coordinates, fill in trip
 NB. between those coordinates, mask with board, no pieces in way if
 NB. number of bits on doesn't change...?
-1 [ 'f1=B+' san fen^:_1 '8/8/8/8/8/8/4Kpk1/8 b - - 0 1'
