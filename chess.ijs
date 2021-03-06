@@ -74,7 +74,7 @@ NB. move = (piece? file? rank? capture? square (promotion piece)? kingattack?)
 NB.      | castle
 
 piece =: [: (* 6&~:) (6}.pieces) i. {.
-movesto =: _2 {. -.&(pieces,'+#=')
+movesto =: _2 {. -.&((6}.pieces),'+#=')
 maskto =: (i. 8 8) = 8 #. square @: movesto
 maskf =: (8 8 $ i.8) = ({.coords)&i.
 maskr =: (8 $"0 i.8) = ({:coords)&i.
@@ -83,10 +83,12 @@ maskc =: maskr`maskf@.(e.&'abcdefgh')
 NB. have a target square, figure out which piece can get there.
 maskfrom =: 3 : 0
  NB. where can the piece come from when going to move y?
- msk =. (i. 8 8) = 8 #. square d =. _2 {. z =. y -. pieces,'x+#='
+ NB. 6}.pieces because b is bishop and file...
+ msk =. (i. 8 8) = 8 #. square d =. _2 {. z =. y -. (6}.pieces),'x+#='
  p =. piece y  NB. pawn = 0, so if. works
  if. p do. ,:~ (*/maskc _2}.z) * +./ (p{::NHOOD)|.!.0 msk
- else.     (maskf {.y) *"2 (_4 +./\ NP |.!.0 msk) end.
+ else. (maskf {.y) *"2 (_4 +./\ NP |.!.0 msk) end.
+ 
 )
 castleq =: 3 : 0
  'brd bw oo ep hm fm' =. y
@@ -137,7 +139,6 @@ san =: 4 : 0
   else. clr =. ((</\&.:|.)@:(+./\.))^:(0=p) (+./p{"_1 brd) * bw{maskfrom x end.
   to =. maskto x
   if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
-NB.  echo clr;to
   clr =. clr + to
   to =. ,:~ (p=i.6) */ to
   brd1 =. ((bw=i.2) * to) + (-.clr) *"2 brd
@@ -157,3 +158,27 @@ NB.  echo clr;to
 NB. task: take pgn and produce all states of a game
 NB. ,. (#~ [: * 3 | i.@#) <;._1 ' ',pgn0
 NB. queen rook also getting deleted... right because disambiguation trick doesn't work when pieces are in between...
+
+egpgn =: 0 : 0
+1. f4 Nf6 2. Nf3 g6 3. e3 Bg7 4. d4 d6 5. Be2 O-O 6. O-O Nbd7 7. c4 c5 8. d5 Re8 9. Qc2 e5 10. Re1 exf4 11. exf4 Nb6 12. Nc3 Bf5 13. Qd1 Re7 14. Bd2 Qe8 15. Rc1 a6 16. h3 Nbd7 17. g4 Be4 18. Ng5 h6 19. Ngxe4 Nxe4 20. Nxe4 Rxe4 21. Bf3 Rxe1+ 22. Qxe1 Qxe1+ 23. Rxe1 Kf8 24. b3 b5 25. Kf2 bxc4 26. bxc4 Nb6 27. Rc1 Bd4+ 28. Be3 Bb2 29. Rc2 Bg7 30. Be2 Re8 31. Kf3 Na4 32. h4 Nc3 33. g5 Nxe2 34. Kxe2 Bd4 35. gxh6 Rxe3+ 36. Kd2 Rh3 37. f5 Rxh4 38. fxg6 fxg6 39. Kd3 Rxh6 40. Ke4 Kg7 41. a4 a5 42. Rg2 Rh4+ 43. Kd3 Be5 44. Rf2 Kh6 45. Rf8 Rh3+ 46. Ke4 Bc3 47. Rd8 Be5 48. Ra8 Bc3 49. Rd8 Rh4+ 50. Kd3 Be5 51. Ra8 g5 52. Rxa5 g4 53. Ra7 g3 54. Ra8 g2 55. Rg8 Rh2 56. Rg4 Kh5 57. Rg7 Kh4 58. Rh7+ Kg3 59. Rf7 Kh3 60. Rh7+ Kg3 61. Rf7 g1=Q 62. Rf8 Kg2 63. Rg8+ Kf1 64. Rxg1+ Kxg1 65. Ke4 Rh8 66. Kf5 Ra8 67. Ke6 Rxa4 68. Kd7 Rxc4 0-1
+)
+
+fens_of_pgn =: 3 : 0
+ fens =. < brd =. start
+ for_move. (#~ [: * 3 | i.@#) <;._1 ' ',egpgn do.
+   fens =. fens,<brd =. (>move) san brd
+ end.
+)
+
+NB. _10 {. _5 }. |. ,. {{<"0 print 0 {:: y }} &.> fens_of_pgn egpgn
+
+fens_of_pgn0 =: 4 : 0
+ fens =. < brd =. start
+ for_move. x {. (#~ [: * 3 | i.@#) <;._1 ' ',egpgn do.
+   echo move
+   fens =. fens,<brd =. (>move) san brd
+ end.
+)
+
+dep =. 22
+|. {{ <"0 print 0 {:: y }} &.> _2 {. dep fens_of_pgn0 egpgn
