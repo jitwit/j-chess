@@ -6,6 +6,7 @@ NB. en passant (given color, file gives sufficient info...) 8 means no capture
 NB. half move clock (moves since capture or pawn advance)
 NB. full move clock (increments after black goes)
 pieces =: 'pnbrqkPNBRQK' NB. ascii representation for pieces
+piecesfr =: 'pcftdrPCFTDR'
 pieces_u =: u: (i.-#pieces) + 16b2654 NB. unicode, nb width screws up boxing
 board0 =: (];._2) 0 : 0 NB. starting board
 rnbqkbnr
@@ -153,14 +154,6 @@ NB.  echo clr;to
  end.
 )
 
-NB. will take pgn and produce all states of a game
+NB. task: take pgn and produce all states of a game
 NB. ,. (#~ [: * 3 | i.@#) <;._1 ' ',pgn0
 NB. queen rook also getting deleted... right because disambiguation trick doesn't work when pieces are in between...
-
-'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK1R1 b Qkq - 1 4'
-
-print 0 {:: 'Rg1' san fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
-
-NB. to fix disambiguation: take possible coordinates, fill in trip
-NB. between those coordinates, mask with board, no pieces in way if
-NB. number of bits on doesn't change...?
