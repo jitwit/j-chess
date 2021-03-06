@@ -111,11 +111,14 @@ san =: 4 : 0
  elseif. 'O-O' -: 3{.x do. castlek y
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
   NB. make sure it's most forward pawn by scanning in different
-  NB. directions for each color. (> and \. for black, < and \ for
-  NB. white)
+  NB. directions for each color. (\ for white, \. for black (needs to
+  NB. work under |. because base case is 1 which leads to alternating
+  NB. pattern otherwise)
   if. bw do. clr =. (</\@:(+./\))^:(0=p) (+./p{"_1 brd) * bw{maskfrom x
-  else. clr =. (>/\.@:(+./\.))^:(0=p) (+./p{"_1 brd) * bw{maskfrom x end.
-  clr =. clr + to =. maskto x
+  else. clr =. ((</\&.:|.)@:(+./\.))^:(0=p) (+./p{"_1 brd) * bw{maskfrom x end.
+  to =. maskto x
+  echo clr;to
+  clr =. clr + to
   to =. ,:~ (p=i.6) */ to
   brd1 =. ((bw=i.2) * to) + (-.clr) *"2 brd
   if. '=' e. x  NB. promotion  
@@ -123,8 +126,9 @@ san =: 4 : 0
   NB. en passant
   epr =. I. +/"1 epb =. | +/ IP {"_1 diff =. brd1 - brd
   NB. castling rights
-  echo < +./^:2 | brd1
-  echo (_2 <@square\ 'a1e1h1a8e8h8') { +./^:2 | diff
+
+NB.  echo < +./^:2 | brd1
+NB.  echo (_2 <@square\ 'a1e1h1a8e8h8') { +./^:2 | diff
   oo =. oo * -.,_3 (2+./\])\ (_2 <@square\ 'a1e1h1a8e8h8') { +./^:2 | diff
   if. (-.p) *. (2=-~/epr) *. (*#epr) do. ep =. >./ I. epb else. ep =. 8 end.
   NB. half moves/full moves
@@ -138,3 +142,11 @@ NB. ,. (#~ [: * 3 | i.@#) <;._1 ' ',pgn0
 NB. queen rook also getting deleted... right because disambiguation trick doesn't work when pieces are in between...
 fen 'Rg1' san fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK1R1 b Qkq - 1 4'
+
+print 0 {:: fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
+print 0 {:: 'Rg1' san fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
+
+NB. to fix disambiguation: take possible coordinates, fill in trip
+NB. between those coordinates, mask with board, no pieces in way if
+NB. number of bits on doesn't change...?
+1 [ 'f1=B+' san fen^:_1 '8/8/8/8/8/8/4Kpk1/8 b - - 0 1'
