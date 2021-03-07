@@ -40,10 +40,39 @@ RNBQKBNR
 )
 
 start =: (_6 ]\ pieces ="0 _ board0);1;1 1 1 1;8;0;1
+print =: ('.',pieces) {~ +./ @: (* 1+i.@#) @: (,/)
 #+end_src
 
 #+RESULTS: basics
 : 2 6 8 8
+
+We can see the boards with the help of ~print~:
+
+#+begin_src J :session :exports results :verb 0!:1
+<"0 print 0 {:: start
+#+end_src
+
+#+RESULTS:
+#+begin_example
+   <"0 print 0 {:: start
+┌─┬─┬─┬─┬─┬─┬─┬─┐
+│r│n│b│q│k│b│n│r│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│p│p│p│p│p│p│p│p│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│.│.│.│.│.│.│.│.│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│.│.│.│.│.│.│.│.│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│.│.│.│.│.│.│.│.│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│.│.│.│.│.│.│.│.│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│P│P│P│P│P│P│P│P│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│R│N│B│Q│K│B│N│R│
+└─┴─┴─┴─┴─┴─┴─┴─┘
+#+end_example
 
 ** squares
 
@@ -56,10 +85,10 @@ returns its index in an 8x8 grid.
 #+begin_src J :session :exports both
 'IP IN IB IR IQ IK' =: i. 6
 coords =: 97 (,:|.)&(a.{~+&(i.8)) 49
-square =: [: |. coords&(i."1 0)
+squareix =: [: |. coords&(i."1 0)
 
 movesto =: _2 {. -.&((6}.pieces),'+#=')
-masksq =: (i. 8 8) = 8 #. square @: movesto
+square =: (i. 8 8) = 8 #. squareix @: movesto
 #+end_src
 
 #+RESULTS:
@@ -85,7 +114,7 @@ For example:
 
 #+begin_src J :session :exports results :verb 0!:1
 NN NB. knight moves
-NN (+:@] + +./@:(|.!.0)) masksq 'b5' NB. knight's moves from b5
+NN (+:@] + +./@:(|.!.0)) square 'b5' NB. knight's moves from b5
 #+end_src
 
 #+RESULTS:
@@ -99,7 +128,7 @@ _1  2
  1 _2
  2  1
  1  2
-   NN (+:@] + +./@:(|.!.0)) masksq 'b5' NB. knight's moves from b5
+   NN (+:@] + +./@:(|.!.0)) square 'b5' NB. knight's moves from b5
 0 0 0 0 0 0 0 0
 1 0 1 0 0 0 0 0
 0 0 0 1 0 0 0 0
@@ -110,7 +139,59 @@ _1  2
 0 0 0 0 0 0 0 0
 #+end_example
 
+* FEN
 
+It's (clearly) useful to be able to input and output postions in FEN
+format. FEN encodes positions with a string describing the board rank
+by rank, from the 8th forward separated by ~/~, with lower case for
+black, upper case for white, with empty spaces encoded by
+numbers. Turn indicated by ~b | w~, castling rights with chars ~KQkq~,
+en passant target square, half moves & full moves. The absence of
+castling rights or en passant squares is shown via a dash ~-~.
+
+#+name: fen
+#+begin_src J :session :exports both
+NB. FEN helpers
+rleb =. (0&{::#1&{::)`([:":0&{::)@.('.'-:1&{::)
+rldb =. ]`('.'#~".)@.(e.&({:coords))
+rle =. ([: < [: rleb (#;{.));.1~ 1,2 ~:/\ ]
+rld =. [: ([:;<@rldb"0);._1 '/',]
+efen =. [: > [: (([,'/',])&.>)/ [: <@;@rle"1 print
+dfen =. (_6]\i.#pieces) =/ pieces i. rld
+
+fen_of =: 3 : 0
+ NB. fen from our representation
+ 'brd bw oo ep hm fm' =. y
+ oo =. (0<+/oo){::'-';oo#'KQkq'
+ ep =. (ep~:8){::'-';(ep{({.coords),'-'),(bw{'36')
+ ;:^:_1 (efen brd);(bw{'bw');oo;ep;hm;&":fm
+)
+
+pos_of =: 3 : 0
+ NB. our representation from a fen
+ 'brd bw oo ep hm fm' =. <;._1 ' ',y
+ NB. careful that bw isn't array?
+ (dfen brd);('w'={.bw);('KQkq'e.oo);({:(squareix :: 8:)ep);hm;&".fm
+)
+
+NB. fen to encode, fen^:_1 to decode
+fen =: fen_of :. pos_of
+#+end_src
+
+#+RESULTS: fen
+
+#+begin_src J :session :exports results :verb 0!:1
+fen start
+start -: ]&.:fen start
+#+end_src
+
+#+RESULTS:
+:    fen start
+: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+:    start -: ]&.:fen start
+: 1
+
+* Final program
 
 #+begin_src J :session :tangle chess-chess.ijs :noweb yes
 coclass 'jchess'
@@ -119,4 +200,6 @@ coclass 'jchess'
 <<squares>>
 
 <<neighborhoods>>
+
+<<fen>>
 #+end_src
