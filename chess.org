@@ -193,7 +193,7 @@ maskfrom =: 3 : 0
 )
 #+end_src
 
-** Disambiguating
+** disambiguation
 
 Sometimes two pieces can move to the same square, if not for some
 other pieces in the way. Algebraic notation leaves these situations
@@ -272,6 +272,34 @@ san =: 4 : 0
  end.
 )
 #+end_src
+
+For example some Blackmar-Diemer-Ryder:
+
+#+begin_src J :session :exports results :verb 0!:1
+<"0 print 0 {:: 'Qxd4' san 'Qxf3' san 'exf3' san 'f3' san 'Nf6' san 'Nc3' san 'dxe4' san 'd4' san 'd5' san 'e4' san start
+#+end_src
+
+#+RESULTS:
+#+begin_example
+   <"0 print 0 {:: 'Qxd4' san 'Qxf3' san 'exf3' san 'f3' san 'Nf6' san 'Nc3' san 'dxe4' san 'd4' san 'd5' san 'e4' san start
+┌─┬─┬─┬─┬─┬─┬─┬─┐
+│r│n│b│.│k│b│.│r│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│p│p│p│.│p│p│p│p│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│.│.│.│.│.│n│.│.│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│.│.│.│.│.│.│.│.│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│.│.│.│q│.│.│.│.│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│.│.│N│.│.│Q│.│.│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│P│P│P│.│.│.│P│P│
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│R│.│B│.│K│B│N│R│
+└─┴─┴─┴─┴─┴─┴─┴─┘
+#+end_example
 
 * PGN
 
