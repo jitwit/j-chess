@@ -88,24 +88,21 @@ maskfrom =: 3 : 0
  p =. piece y  NB. pawn = 0, so if. works
  if. p do. ,:~ (*/maskc _2}.z) * +./ (p{::NHOOD)|.!.0 msk
  else. (maskf {.y) *"2 (_4 +./\ NP |.!.0 msk) end.
- 
 )
-castleq =: 3 : 0
+
+NB. x = 0 or 1 means king or queen sides resp, y is position
+castle =: 4 : 0
  'brd bw oo ep hm fm' =. y
  oo =. oo * (-+:<:+:bw) |.!.0 oo
- if. bw do. 'k r' =. 'c1';'a1d1' else. 'k r' =. 'c8';'a8d8' end.
+ if. x do. if. bw do. 'k r' =. 'c1';'a1d1' else. 'k r' =. 'c8';'a8d8' end.
+ else.     if. bw do. 'k r' =. 'g1';'f1h1' else. 'k r' =. 'g8';'f8h8' end.
+ end.
  rm =. (+./ _2 maskto\ r) ~: (<bw,IR) { brd
  brd =. ((maskto k),:rm)((<bw,IK),(<bw,IR))}brd
  brd;(-.bw);oo;ep;(hm+1);(fm+-.bw)
 )
-castlek =: 3 : 0
- 'brd bw oo ep hm fm' =. y
- oo =. oo * (-+:<:+:bw) |.!.0 oo
- if. bw do. 'k r' =. 'g1';'f1h1' else. 'k r' =. 'g8';'f8h8' end.
- rm =. (+./ _2 maskto\ r) ~: (<bw,IR) { brd
- brd =. ((maskto k),:rm)((<bw,IK),(<bw,IR))}brd
- brd;(-.bw);oo;ep;(hm+1);(fm+-.bw)
-)
+castleq =: 1&castle
+castlek =: 0&castle
 
 NB. take board, masks, figure out which piece it really must be.
 NB. issues include pieces in way, pieces one in front of other.
@@ -128,8 +125,8 @@ disamb =: 3 : 0
 san =: 4 : 0
  NB. produces resulting position with arguments x as move in SAN, y as
  NB. position in J representation.
- if. 'O-O-O' -: 5{.x   do. castleq y NB. {. to avoid possible +/#
- elseif. 'O-O' -: 3{.x do. castlek y
+ if. 'O-O-O' -: 5{.x   do. 1 castle y NB. {. to avoid possible +/#
+ elseif. 'O-O' -: 3{.x do. 0 castle y
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
   NB. make sure it's most forward pawn by scanning in different
   NB. directions for each color. (\ for white, \. for black (needs to
@@ -138,7 +135,6 @@ san =: 4 : 0
   if. bw do. clr =. (</\@:(+./\))^:(0=p) (bw{p{"_1 brd) * bw{maskfrom x
   else. clr =. ((</\&.:|.)@:(+./\.))^:(0=p) (bw{p{"_1 brd) * bw{maskfrom x end.
   to =. maskto x
-NB.  echo (p{"_1 brd) ; bw { maskfrom x
   if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
   clr =. clr + to
   to =. ,:~ (p=i.6) */ to
@@ -170,7 +166,7 @@ game_of_pgn =: 3 : 0
  end.
 )
 
-game_of_pgn0 =: 4 : 0
+game_of_pgn_debug =: 4 : 0
  moves =. (#~ [: * 3 | i.@#) (<;._1 ' ',y) -. a:,'1-0';'0-1';'1/2-1/2'
  fens =. < brd =. start
  for_move. x {. moves do.

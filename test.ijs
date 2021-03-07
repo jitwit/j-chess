@@ -74,7 +74,9 @@ NB. example bullet(s)
 '8/5pk1/5p2/8/5P1p/5P2/r6P/1R4RK b - - 0 42' -: fen > {: game_of_pgn pgn_com egbullet-.LF
 'r6q/1p1bpk2/p2p1p2/2pP4/2P1P3/P5R1/1P2NQP1/4R1Kr w - - 4 29' -: fen > {: game_of_pgn pgn_com egbullet1-.LF
 '8/5pk1/2n3p1/1Q6/8/4n1Nq/6r1/7K w - - 2 38' -: fen > {: game_of_pgn pgn_com egbullet2-.LF
+'8/5pk1/2n3p1/1Q6/8/4n1Nq/6r1/7K w - - 2 38' -: fen > {: game_of_pgn pgn_com egbullet2-.LF
 )
+
 
 NB. fen start
 NB. fen 'e4' san start
@@ -90,9 +92,8 @@ NB. fen 'Nf3' san 'c5' san 'e4' san start
 0!:2 cases
 NB. |. |."1 <"1 ,~"0/~/ coords
 
-NB. gogo =: {{ print 0 {:: > y { y game_of_pgn0 pgn_com x }}
+NB. gogo =: {{ print 0 {:: > y { y game_of_pgn_debug pgn_com x }}
 NB. egbullet gogo 7
 NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet-.LF
 NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet1-.LF
 NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet2-.LF
-
