@@ -1,4 +1,5 @@
-load 'chess.ijs stats/bonsai'
+load 'chess-chess.ijs stats/bonsai'
+coinsert 'jchess'
 
 fendfen =: ]&.(fen^:_1)
 checkfen =: -: fendfen
@@ -31,8 +32,8 @@ demos =: 0 : 0
 
 cases =: 0 : 0
 NB. check that e8 is black king and b1 is white knight
-'k' -: (<square 'e8') { print 0 {:: start
-'N' -: (<square 'b1') { print 0 {:: start
+'k' -: (<squareix 'e8') { print 0 {:: start
+'N' -: (<squareix 'b1') { print 0 {:: start
 
 NB. convert to and from fen after some sicillian
 checkfen 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
