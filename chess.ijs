@@ -156,9 +156,25 @@ NB.  echo (p{"_1 brd) ; bw { maskfrom x
  end.
 )
 
+NB. pgns
+NB. strip comments
+NB. to be replaced with more valid parsing
+pgn_com =: #~ 0 = [: (+. _1&(|.!.0))[: +/\ '{}'&(-/@:(=/))
+clean_pgn =: pgn_com @: (-.&LF)
+
 game_of_pgn =: 3 : 0
+ moves =. (#~ [: * 3 | i.@#) (<;._1 ' ',y) -. a:,'1-0';'0-1';'1/2-1/2'
  fens =. < brd =. start
- for_move. (#~ [: * 3 | i.@#) <;._1 ' ',y do.
+ for_move. moves do.
+   fens =. fens,<brd =. (>move) san brd
+ end.
+)
+
+game_of_pgn0 =: 4 : 0
+ moves =. (#~ [: * 3 | i.@#) (<;._1 ' ',y) -. a:,'1-0';'0-1';'1/2-1/2'
+ fens =. < brd =. start
+ for_move. x {. moves do.
+   echo move
    fens =. fens,<brd =. (>move) san brd
  end.
 )
