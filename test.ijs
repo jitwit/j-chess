@@ -13,6 +13,14 @@ egbullet =: 0 : 0
 1. e4 b6 2. Nf3 Bb7 3. d4 { B00 Owen Defense: Smith Gambit } d5 4. exd5 Bxd5 5. Nc3 Nf6 6. Be2 e6 7. O-O Bb4 8. Nxd5 exd5 9. c3 Bd6 10. Bg5 O-O 11. Ne5 h6 12. Bh4 Be7 13. Bb5 Ne4 14. Bxe7 Qxe7 15. Bc6 Nxc6 16. Nxc6 Qd6 17. Nb4 c5 18. Nd3 cxd4 19. cxd4 Qf6 20. Ne5 Rac8 21. f3 Nd6 22. Nd7 Qf4 23. Nxf8 Qe3+ 24. Kh1 Rxf8 25. Re1 Qg5 26. Rg1 Nf5 27. Qb3 Qf4 28. Qxd5 Nxd4 29. Rae1 Nf5 30. Re5 Nh4 31. Re4 Qf6 32. Qe5 Ng6 33. Qxf6 gxf6 34. Re7 Rc8 35. Rxa7 Rc2 36. Ra3 Rxb2 37. Rb3 Rxa2 38. Rxb6 Kg7 39. Rb8 Nf4 40. Rbb1 h5 41. g3 h4 42. gxf4+ { White wins on time. } 1-0
 )
 
+egbullet1 =: 0 : 0
+1. e4 d6 2. Nf3 g6 3. d4 Bg7 4. c4 Nf6 5. Nc3 { E90 King's Indian Defense: Normal Variation, Rare Defenses } O-O 6. Bd3 Nbd7 7. O-O c5 8. d5 Nb6 9. a3 Ng4 10. h3 Ne5 11. Nxe5 Bxe5 12. f4 Bg7 13. Be3 a6 14. Qd2 Nd7 15. f5 Ne5 16. fxg6 hxg6 17. Rae1 Nxd3 18. Qxd3 f6 19. Qd2 Kf7 20. Bh6 Rh8 21. Bxg7 Kxg7 22. Qf4 Rh6 23. Rf3 Qh8 24. Rg3 g5 25. Qf2 Kf7 26. Rxg5 Bxh3 27. Rg3 Bd7 28. Ne2 Rh1# { Black wins by checkmate. } 0-1
+)
+
+egbullet2 =: 0 : 0
+1. e4 d6 { B00 Pirc Defense } 2. Nf3 Nf6 3. Bc4 Nxe4 4. O-O Nf6 5. d4 g6 6. Bg5 Bg7 7. Re1 O-O 8. Qd2 e6 9. Bh6 Nbd7 10. Bxg7 Kxg7 11. Nc3 c6 12. d5 exd5 13. Bf1 b5 14. b4 Bb7 15. a4 a6 16. axb5 axb5 17. Rxa8 Qxa8 18. Ne2 c5 19. bxc5 dxc5 20. Ng3 d4 21. c3 Bxf3 22. gxf3 Qxf3 23. cxd4 cxd4 24. Qxd4 Nb8 25. Re3 Qc6 26. Bg2 Qc8 27. h4 Rd8 28. Qb4 Rd1+ 29. Kh2 Qd7 30. Qb2 Rd2 31. Qe5 Rxf2 32. h5 Nc6 33. hxg6 hxg6 34. Qxb5 Ng4+ 35. Kh3 Nxe3+ 36. Kh2 Rxg2+ 37. Kh1 Qh3# { Black wins by checkmate. } 0-1
+)
+
 pgn0 =: 0 : 0
 1. e4 d6 2. f4 Nf6 3. Nf3 Nxe4 4. Bc4 e6 5. O-O g6 6. d3 Nc5 7. a3 Bg7 8. c3 a6 9. d4 Ne4 10. Nbd2 Nxd2 11. Bxd2 O-O 12. Ng5 b5 13. Ba2 Nc6 14. Qf3 Bb7 15. Qh3 h6 16. Nf3 e5 17. fxe5 dxe5 18. Bxh6 exd4 19. Bxg7 Kxg7 20. Nxd4 Nxd4 21. cxd4 Qxd4+ 22. Kh1 Qxb2 23. Qd7 Qxg2# 0-1
 )
@@ -62,8 +70,10 @@ NB. other. also castling rights if rook on a8 moves.
 
 NB. running an example blitz game gives right fen at end
 '8/3K4/3p4/2pPb3/2r5/8/8/6k1 w - - 0 69' -: fen > {: game_of_pgn egblitz
-NB. example bullet
+NB. example bullet(s)
 '8/5pk1/5p2/8/5P1p/5P2/r6P/1R4RK b - - 0 42' -: fen > {: game_of_pgn pgn_com egbullet-.LF
+'r6q/1p1bpk2/p2p1p2/2pP4/2P1P3/P5R1/1P2NQP1/4R1Kr w - - 4 29' -: fen > {: game_of_pgn pgn_com egbullet1-.LF
+'8/5pk1/2n3p1/1Q6/8/4n1Nq/6r1/7K w - - 2 38' -: fen > {: game_of_pgn pgn_com egbullet2-.LF
 )
 
 NB. fen start
@@ -80,8 +90,9 @@ NB. fen 'Nf3' san 'c5' san 'e4' san start
 0!:2 cases
 NB. |. |."1 <"1 ,~"0/~/ coords
 
-gogo =: {{ print 0 {:: > y { y game_of_pgn0 pgn_com x }}
-egbullet gogo 7
-<"0 print 0 {:: > {: game_of_pgn pgn_com egbullet-.LF
-
+NB. gogo =: {{ print 0 {:: > y { y game_of_pgn0 pgn_com x }}
+NB. egbullet gogo 7
+NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet-.LF
+NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet1-.LF
+NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet2-.LF
 
