@@ -114,7 +114,7 @@ For example:
 
 #+begin_src J :session :exports results :verb 0!:1
 NN NB. knight moves
-NN (+:@] + +./@:(|.!.0)) square 'b5' NB. knight's moves from b5
+<"0 ' x@' {~ NN (+:@] + +./@:(|.!.0)) square 'b5' NB. knight's moves from b5
 #+end_src
 
 #+RESULTS:
@@ -128,15 +128,24 @@ _1  2
  1 _2
  2  1
  1  2
-   NN (+:@] + +./@:(|.!.0)) square 'b5' NB. knight's moves from b5
-0 0 0 0 0 0 0 0
-1 0 1 0 0 0 0 0
-0 0 0 1 0 0 0 0
-0 2 0 0 0 0 0 0
-0 0 0 1 0 0 0 0
-1 0 1 0 0 0 0 0
-0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0
+   <"0 ' x@' {~ NN (+:@] + +./@:(|.!.0)) square 'b5' NB. knight's moves from b5
+┌─┬─┬─┬─┬─┬─┬─┬─┐
+│ │ │ │ │ │ │ │ │
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│x│ │x│ │ │ │ │ │
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│ │ │ │x│ │ │ │ │
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│ │@│ │ │ │ │ │ │
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│ │ │ │x│ │ │ │ │
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│x│ │x│ │ │ │ │ │
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│ │ │ │ │ │ │ │ │
+├─┼─┼─┼─┼─┼─┼─┼─┤
+│ │ │ │ │ │ │ │ │
+└─┴─┴─┴─┴─┴─┴─┴─┘
 #+end_example
 
 * Algebraic Notation
@@ -364,13 +373,13 @@ fen =: fen_of :. pos_of
 #+RESULTS: fen
 
 #+begin_src J :session :exports results :verb 0!:1
-fen start
+fen 'Qxd4' san 'Qxf3' san 'exf3' san 'f3' san 'Nf6' san 'Nc3' san 'dxe4' san 'd4' san 'd5' san 'e4' san start
 start -: ]&.:fen start
 #+end_src
 
 #+RESULTS:
-:    fen start
-: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+:    fen 'Qxd4' san 'Qxf3' san 'exf3' san 'f3' san 'Nf6' san 'Nc3' san 'dxe4' san 'd4' san 'd5' san 'e4' san start
+: rnb1kb1r/ppp1pppp/5n2/8/3q4/2N2Q2/PPP3PP/R1B1KBNR w KQkq - 0 6
 :    start -: ]&.:fen start
 : 1
 
