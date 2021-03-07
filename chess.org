@@ -1,0 +1,122 @@
+#+title: Chess from J
+#+subtitle: idk
+#+OPTIONS: author:nil num:nil
+#+HTML_HEAD: <link rel="stylesheet" href="../format/css.css" />
+#+HTML_HEAD: <link rel="icon" type="image/png" href="../images/icon.png" />
+
+
+* Representation
+
+** bitboard/state
+
+Letters for pieces and a starting board. The representation:
++ 2x6 table of 8x8 bitboards for each color for each piece. The first
+  item of the table represents black's position and the last item
+  white's. 
++ The player's move is an index 0 or 1 into that bitboard table,
+  starting at 1 for white to move.
++ Castling rights are indicated with a length for array for white's
+  king & queen sides then black's king & queen sides rights.
++ En passant is represented by a column (0-7). Based on whose turn it
+  is this is sufficient to determine the target square, as the only
+  moves when pawn's advance by 2 are rows 2->4 or 7->5. No enpassant
+  target is indicated by the number 8.
++ Half move clock is a number (the moves since last capture or pawn move).
++ Full move clock is a number that increments after moves by black.
+
+#+name: basics
+#+begin_src J :session :exports code
+pieces =: 'pnbrqkPNBRQK'
+
+board0 =: (];._2) 0 : 0
+rnbqkbnr
+pppppppp
+........
+........
+........
+........
+PPPPPPPP
+RNBQKBNR
+)
+
+start =: (_6 ]\ pieces ="0 _ board0);1;1 1 1 1;8;0;1
+#+end_src
+
+#+RESULTS: basics
+: 2 6 8 8
+
+** squares
+
+~IP, ..., IK~ give some kind of enumeration of the indices for the
+various piece bitboards. ~coords~ give the algebraic ascii values for
+columns and rows. ~square~ takes a description for a square and
+returns its index in an 8x8 grid.
+
+#+name: squares
+#+begin_src J :session :exports both
+'IP IN IB IR IQ IK' =: i. 6
+coords =: 97 (,:|.)&(a.{~+&(i.8)) 49
+square =: [: |. coords&(i."1 0)
+
+movesto =: _2 {. -.&((6}.pieces),'+#=')
+masksq =: (i. 8 8) = 8 #. square @: movesto
+#+end_src
+
+#+RESULTS:
+: abcdefgh
+: 87654321
+
+** movement
+
+Here are neighborhoods for all the pieces, described as vectors.
+
+#+name: neighborhoods
+#+begin_src J :session :exports both
+NP =: (,-) 2 0,1,.i:1 NB. pawn (both black & white)
+NN =: ,/ (<:+:#:i.4) *"1/ >:=/~i.2 NB. knight
+NB =: ,/ (<:+:#.^:_1 i.4) *"1/ ,~"0}.i.8 NB. bishop
+NR =: (,-) (,.&0,0&,.) }. i.8 NB. rook
+NQ =: NB,NR NB. queen
+NK =: <: 3 #.^:_1 (i.9)-.4 NB. king
+NHOOD =: NP;NN;NB;NR;NQ;NK
+#+end_src
+
+For example:
+
+#+begin_src J :session :exports results :verb 0!:1
+NN NB. knight moves
+NN (+:@] + +./@:(|.!.0)) masksq 'b5' NB. knight's moves from b5
+#+end_src
+
+#+RESULTS:
+#+begin_example
+   NN NB. knight moves
+_2 _1
+_1 _2
+_2  1
+_1  2
+ 2 _1
+ 1 _2
+ 2  1
+ 1  2
+   NN (+:@] + +./@:(|.!.0)) masksq 'b5' NB. knight's moves from b5
+0 0 0 0 0 0 0 0
+1 0 1 0 0 0 0 0
+0 0 0 1 0 0 0 0
+0 2 0 0 0 0 0 0
+0 0 0 1 0 0 0 0
+1 0 1 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+#+end_example
+
+
+
+#+begin_src J :session :tangle chess-chess.ijs :noweb yes
+coclass 'jchess'
+<<basics>>
+
+<<squares>>
+
+<<neighborhoods>>
+#+end_src

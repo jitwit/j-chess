@@ -166,6 +166,9 @@ game_of_pgn =: 3 : 0
  end.
 )
 
+NB. to make a db of positions....
+NB. fen, parent move, gameid
+
 game_of_pgn_debug =: 4 : 0
  moves =. (#~ [: * 3 | i.@#) (<;._1 ' ',y) -. a:,'1-0';'0-1';'1/2-1/2'
  fens =. < brd =. start
