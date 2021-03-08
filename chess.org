@@ -154,11 +154,11 @@ _1  2
 
 This a most annoying thing to get working. Chess moves are described
 by giving the piece and the square it moves to. Pawns moves are
-implicitly given by just the square, and if only one piece can move to
-some square, then the source square is not indicated. If there is
-ambiguity then more information about the source is given, the source
-file, rank, or even the full source square if file or rank alone is
-still ambiguous. 
+implicitly given by just the square. If only one piece can move to the
+square, then the source is not indicated. If there is ambiguity then
+more information about the source is given, the source file, rank, or
+even the full source square if file or rank alone would still be
+ambiguous.
 
 The grammar is (roughly):
 
@@ -263,8 +263,7 @@ san =: 4 : 0
   NB. directions for each color. (\ for white, \. for black (needs to
   NB. work under |. because base case is 1 which leads to alternating
   NB. pattern otherwise)
-  if. bw do. clr =. (</\@:(+./\))^:(0=p) (bw{p{"_1 brd) * bw{maskfrom x
-  else. clr =. ((</\&.:|.)@:(+./\.))^:(0=p) (bw{p{"_1 brd) * bw{maskfrom x end.
+  clr =. (bw{p{"_1 brd) * bw{maskfrom x
   to =. square x
   if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
   clr =. clr + to

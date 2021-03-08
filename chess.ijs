@@ -84,8 +84,7 @@ san =: 4 : 0
   NB. directions for each color. (\ for white, \. for black (needs to
   NB. work under |. because base case is 1 which leads to alternating
   NB. pattern otherwise)
-  if. bw do. clr =. (</\@:(+./\))^:(0=p) (bw{p{"_1 brd) * bw{maskfrom x
-  else. clr =. ((</\&.:|.)@:(+./\.))^:(0=p) (bw{p{"_1 brd) * bw{maskfrom x end.
+  clr =. (bw{p{"_1 brd) * bw{maskfrom x
   to =. square x
   if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
   clr =. clr + to

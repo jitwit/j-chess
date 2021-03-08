@@ -111,7 +111,3 @@ NB. example bullet(s)
 
 0!:1 demos
 0!:2 cases
-
-NB. why does chess.com add annoying 1... before black moves???
-NB. <"0 print 0 {:: > {: _3 }.\ pgn_moves egblitzchesscom
-
