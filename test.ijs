@@ -92,10 +92,10 @@ NB. other. also castling rights if rook on a8 moves.
 NB. running an example blitz game gives right fen at end
 '8/3K4/3p4/2pPb3/2r5/8/8/6k1 w - - 0 69' -: fen > {: game_of_pgn egblitz
 NB. example bullet(s)
-'8/5pk1/5p2/8/5P1p/5P2/r6P/1R4RK b - - 0 42' -: fen > {: game_of_pgn pgn_com egbullet-.LF
-'r6q/1p1bpk2/p2p1p2/2pP4/2P1P3/P5R1/1P2NQP1/4R1Kr w - - 4 29' -: fen > {: game_of_pgn pgn_com egbullet1-.LF
-'8/5pk1/2n3p1/1Q6/8/4n1Nq/6r1/7K w - - 2 38' -: fen > {: game_of_pgn pgn_com egbullet2-.LF
-'8/5pk1/2n3p1/1Q6/8/4n1Nq/6r1/7K w - - 2 38' -: fen > {: game_of_pgn pgn_com egbullet2-.LF
+'8/5pk1/5p2/8/5P1p/5P2/r6P/1R4RK b - - 0 42' -: fen > {: game_of_pgn egbullet
+'r6q/1p1bpk2/p2p1p2/2pP4/2P1P3/P5R1/1P2NQP1/4R1Kr w - - 4 29' -: fen > {: game_of_pgn egbullet1
+'8/5pk1/2n3p1/1Q6/8/4n1Nq/6r1/7K w - - 2 38' -: fen > {: game_of_pgn egbullet2
+'8/5pk1/2n3p1/1Q6/8/4n1Nq/6r1/7K w - - 2 38' -: fen > {: game_of_pgn egbullet2
 )
 
 
@@ -111,6 +111,7 @@ NB. fen 'Nf3' san 'c5' san 'e4' san start
 
 0!:1 demos
 0!:2 cases
+
 NB. |. |."1 <"1 ,~"0/~/ coords
 
 NB. gogo =: {{ print 0 {:: > y { y game_of_pgn_debug pgn_com x }}

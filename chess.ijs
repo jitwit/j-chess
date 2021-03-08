@@ -142,3 +142,8 @@ game_of_pgn =: 3 : 0
    fens =. fens,<brd =. (>move) san brd
  end.
 )
+
+NB. fen_z_ =: fen_jchess_
+NB. print_z_ =: print_jchess_
+NB. san_z_ =: san_jchess_
+NB. start_z_ =: start_jchess_

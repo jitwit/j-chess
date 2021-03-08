@@ -411,4 +411,9 @@ NB. fen, obvi
 
 NB. pgn, obvi
 <<pgn>>
+
+NB. fen_z_ =: fen_jchess_
+NB. print_z_ =: print_jchess_
+NB. san_z_ =: san_jchess_
+NB. start_z_ =: start_jchess_
 #+end_src
