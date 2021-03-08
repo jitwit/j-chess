@@ -1,4 +1,4 @@
-load 'chess-chess.ijs stats/bonsai'
+load 'chess.ijs stats/bonsai'
 coinsert 'jchess'
 
 fendfen =: ]&.(fen^:_1)
@@ -20,6 +20,26 @@ egbullet1 =: 0 : 0
 
 egbullet2 =: 0 : 0
 1. e4 d6 { B00 Pirc Defense } 2. Nf3 Nf6 3. Bc4 Nxe4 4. O-O Nf6 5. d4 g6 6. Bg5 Bg7 7. Re1 O-O 8. Qd2 e6 9. Bh6 Nbd7 10. Bxg7 Kxg7 11. Nc3 c6 12. d5 exd5 13. Bf1 b5 14. b4 Bb7 15. a4 a6 16. axb5 axb5 17. Rxa8 Qxa8 18. Ne2 c5 19. bxc5 dxc5 20. Ng3 d4 21. c3 Bxf3 22. gxf3 Qxf3 23. cxd4 cxd4 24. Qxd4 Nb8 25. Re3 Qc6 26. Bg2 Qc8 27. h4 Rd8 28. Qb4 Rd1+ 29. Kh2 Qd7 30. Qb2 Rd2 31. Qe5 Rxf2 32. h5 Nc6 33. hxg6 hxg6 34. Qxb5 Ng4+ 35. Kh3 Nxe3+ 36. Kh2 Rxg2+ 37. Kh1 Qh3# { Black wins by checkmate. } 0-1
+)
+
+egblitzchesscom =: 0 : 0
+1. e4 {[%timestamp 1]} 1... c5 {[%timestamp 1]} 2. Nf3 {[%timestamp 17]} 2... d6
+{[%timestamp 19]} 3. d4 {[%timestamp 7]} 3... cxd4 {[%timestamp 25]} 4. Nxd4
+{[%timestamp 1]} 4... Nf6 {[%timestamp 15]} 5. Nc3 {[%timestamp 9]} 5... a6
+{[%timestamp 12]} 6. Be3 {[%timestamp 28]} 6... e5 {[%timestamp 19]} 7. Nb3
+{[%timestamp 56]} 7... Be7 {[%timestamp 58]} 8. f3 {[%timestamp 18]} 8... Be6
+{[%timestamp 37]} 9. Qd2 {[%timestamp 28]} 9... Nbd7 {[%timestamp 72]} 10. Be2
+{[%timestamp 54]} 10... Qc7 {[%timestamp 21]} 11. g4 {[%timestamp 26]} 11... b5
+{[%timestamp 63]} 12. a3 {[%timestamp 19]} 12... Rc8 {[%timestamp 53]} 13. h4
+{[%timestamp 67]} 13... Nb6 {[%timestamp 40]} 14. g5 {[%timestamp 278]} 14...
+Nfd7 {[%timestamp 105]} 15. f4 {[%timestamp 51]} 15... Nc4 {[%timestamp 81]} 16.
+Bxc4 {[%timestamp 90]} 16... bxc4 {[%timestamp 1]} 17. Nc1 {[%timestamp 333]}
+17... Rb8 {[%timestamp 49]} 18. f5 {[%timestamp 143]} 18... Bxf5 {[%timestamp
+147]} 19. exf5 {[%timestamp 1]} 19... Rxb2 {[%timestamp 16]} 20. Nd5
+{[%timestamp 83]} 20... Qb7 {[%timestamp 150]} 21. Rf1 {[%timestamp 249]} 21...
+f6 {[%timestamp 273]} 22. Nxe7 {[%timestamp 44]} 22... Kxe7 {[%timestamp 23]}
+23. gxf6+ {[%timestamp 16]} 23... gxf6 {[%timestamp 72]} 24. Qg2 {[%timestamp
+107]} 24... Qxg2 {[%timestamp 69]} 0-1
 )
 
 pgn0 =: 0 : 0
@@ -98,3 +118,6 @@ NB. egbullet gogo 7
 NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet-.LF
 NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet1-.LF
 NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet2-.LF
+
+NB. why does chess.com add annoying 1... before black moves???
+NB. <"0 print 0 {:: > {: _3 }.\ pgn_moves egblitzchesscom

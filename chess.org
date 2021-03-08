@@ -224,7 +224,7 @@ disamb =: 3 : 0
 )
 #+end_src
 
-** Castling
+** castling
 
 #+name: castling
 #+begin_src J :session :exports both
@@ -319,10 +319,12 @@ of a game.
 #+name: pgn
 #+begin_src J :session :exports both
 pgn_com =: #~ 0 = [: (+. _1&(|.!.0))[: +/\ '{}'&(-/@:(=/))
-clean_pgn =: pgn_com @: (-.&LF)
+pgn_clean =: {{ pgn_com ' ' (I. LF=y)} y }}
+pgn_nonmoves =: a:,'1-0';'0-1';'1/2-1/2'
+pgn_moves =: {{ (<;._1 ' ',pgn_clean y) -. pgn_nonmoves }}
 
 game_of_pgn =: 3 : 0
- moves =. (#~ [: * 3 | i.@#) (<;._1 ' ',y) -. a:,'1-0';'0-1';'1/2-1/2'
+ moves =. (#~ [: * 3 | i.@#)  pgn_moves y
  fens =. < brd =. start
  for_move. moves do.
    fens =. fens,<brd =. (>move) san brd
@@ -385,7 +387,7 @@ start -: ]&.:fen start
 
 * Final program
 
-#+begin_src J :session :tangle chess-chess.ijs :noweb yes
+#+begin_src J :session :tangle chess.ijs :noweb yes
 coclass 'jchess'
 
 NB. core representation
