@@ -256,7 +256,6 @@ moment) assumed the input pgn/move/state is valid and consistent.
 san =: 4 : 0
  NB. produces resulting position with arguments x as move in SAN, y as
  NB. position in J representation.
- x =. x -. '?!' NB. remove move quality commentary
  if. 'O-O-O' -: 5{.x   do. 1 castle y NB. {. to avoid possible +/#
  elseif. 'O-O' -: 3{.x do. 0 castle y
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
@@ -322,12 +321,15 @@ of a game.
 #+name: pgn
 #+begin_src J :session :exports both
 del_brak =: ] #~ 0 = [: (+. _1&(|.!.0)) [: +/\ (-/@:(=/))
+del_com =: (-.&'?!')&.>
+del_num =: #~ ('.' ~: {:)&>
 pgn_clean =: {{ '()' del_brak '{}' del_brak ' ' (I. LF=y)} y }}
 pgn_nonmoves =: a:,'1-0';'0-1';'1/2-1/2'
-pgn_moves =: {{ (<;._1 ' ',pgn_clean y) -. pgn_nonmoves }}
+pgn_moves =: {{ del_num del_com (<;._1 ' ',pgn_clean y) -. pgn_nonmoves }}
 
+NB. x =. x -. '?! ' NB. remove move quality commentary
 game_of_pgn =: 3 : 0
- moves =. (#~ [: * 3 | i.@#)  pgn_moves y
+ moves =. pgn_moves y
  fens =. < brd =. start
  for_move. moves do.
    fens =. fens,<brd =. (>move) san brd
