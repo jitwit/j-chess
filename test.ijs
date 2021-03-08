@@ -42,6 +42,10 @@ f6 {[%timestamp 273]} 22. Nxe7 {[%timestamp 44]} 22... Kxe7 {[%timestamp 23]}
 107]} 24... Qxg2 {[%timestamp 69]} 0-1
 )
 
+egrapid =: 0 : 0
+1. e4 e5 2. Nf3 Nc6 3. d4 { C44 Scotch Game } d6?! { (0.00 → 0.90) Inaccuracy. exd4 was best. } (3... exd4 4. Nxd4 Nf6 5. Nxc6 bxc6 6. Bd3 d5 7. exd5 cxd5 8. O-O) 4. Bb5 a6?! { (0.59 → 1.57) Inaccuracy. exd4 was best. } (4... exd4 5. O-O Ne7 6. Nxd4 a6 7. Bc4 Nxd4 8. Qxd4 Nc6 9. Qc3) 5. Bxc6+ bxc6 6. dxe5 Bg4 7. exd6 Bxf3? { (1.61 → 3.37) Mistake. Bxd6 was best. } (7... Bxd6 8. O-O Ne7 9. h3 Bxf3 10. Qxf3 O-O 11. Qc3 Rb8 12. f4) 8. Qxf3 Qxd6 9. O-O Be7 10. Bf4 Qc5 11. Nc3 Nf6 12. Bxc7 O-O 13. Bf4 Rfd8 14. Rad1 Rxd1 15. Rxd1 Rd8 16. Rxd8+ Bxd8 17. e5 Nd5 18. Nxd5 cxd5 19. c3 h6 20. g3 d4?! { (4.47 → 5.96) Inaccuracy. a5 was best. } (20... a5) 21. Qa8 Qe7?! { (5.48 → 7.85) Inaccuracy. Qb6 was best. } (21... Qb6) 22. cxd4 Kh7 23. Qxa6 f6 24. Qd6 Qe8 25. Bd2 fxe5 26. dxe5 Be7 27. Qd3+ Kg8 28. f4 Qc6 29. Bc3 Qa4 30. a3 Qb3 31. Kg2 Qb7+ 32. Qf3 Qb3 33. Qa8+ Kh7 34. Qe4+ Kg8 35. f5 Bg5 36. f6 gxf6 37. exf6 Qb6? { (9.68 → Mate in 3) Checkmate is now unavoidable. Bxf6 was best. } (37... Bxf6 38. Qg6+) 38. Qg6+ Kf8 39. Bb4+ { Black resigns. } 1-0
+)
+
 pgn0 =: 0 : 0
 1. e4 d6 2. f4 Nf6 3. Nf3 Nxe4 4. Bc4 e6 5. O-O g6 6. d3 Nc5 7. a3 Bg7 8. c3 a6 9. d4 Ne4 10. Nbd2 Nxd2 11. Bxd2 O-O 12. Ng5 b5 13. Ba2 Nc6 14. Qf3 Bb7 15. Qh3 h6 16. Nf3 e5 17. fxe5 dxe5 18. Bxh6 exd4 19. Bxg7 Kxg7 20. Nxd4 Nxd4 21. cxd4 Qxd4+ 22. Kh1 Qxb2 23. Qd7 Qxg2# 0-1
 )
@@ -96,29 +100,13 @@ NB. example bullet(s)
 'r6q/1p1bpk2/p2p1p2/2pP4/2P1P3/P5R1/1P2NQP1/4R1Kr w - - 4 29' -: fen > {: game_of_pgn egbullet1
 '8/5pk1/2n3p1/1Q6/8/4n1Nq/6r1/7K w - - 2 38' -: fen > {: game_of_pgn egbullet2
 '8/5pk1/2n3p1/1Q6/8/4n1Nq/6r1/7K w - - 2 38' -: fen > {: game_of_pgn egbullet2
+'5k2/8/1q3PQp/6b1/1B6/P5P1/1P4KP/8 b - - 4 39' -: fen > {: game_of_pgn egrapid
 )
-
-
-NB. fen start
-NB. fen 'e4' san start
-NB. fen 'd5' san 'e4' san start
-NB. fen 'exd5' san 'd5' san 'e4' san start
-
-NB. fen start
-NB. fen 'e4' san start
-NB. fen 'c5' san 'e4' san start
-NB. fen 'Nf3' san 'c5' san 'e4' san start
 
 0!:1 demos
 0!:2 cases
 
-NB. |. |."1 <"1 ,~"0/~/ coords
-
-NB. gogo =: {{ print 0 {:: > y { y game_of_pgn_debug pgn_com x }}
-NB. egbullet gogo 7
-NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet-.LF
-NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet1-.LF
-NB. <"0 print 0 {:: > {: game_of_pgn pgn_com egbullet2-.LF
-
 NB. why does chess.com add annoying 1... before black moves???
 NB. <"0 print 0 {:: > {: _3 }.\ pgn_moves egblitzchesscom
+
+

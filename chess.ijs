@@ -2,6 +2,8 @@ coclass 'jchess'
 
 NB. core representation
 pieces =: 'pnbrqkPNBRQK'
+piecesfr =: 'pcftdrPCFTDR'
+pieces_u =: u: (i.-#pieces) + 16b2654 NB. unicode, nb width screws up boxing
 
 board0 =: (];._2) 0 : 0
 rnbqkbnr
@@ -75,6 +77,7 @@ disamb =: 3 : 0
 san =: 4 : 0
  NB. produces resulting position with arguments x as move in SAN, y as
  NB. position in J representation.
+ x =. x -. '?!' NB. remove move quality commentary
  if. 'O-O-O' -: 5{.x   do. 1 castle y NB. {. to avoid possible +/#
  elseif. 'O-O' -: 3{.x do. 0 castle y
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
@@ -130,8 +133,8 @@ NB. fen to encode, fen^:_1 to decode
 fen =: fen_of :. pos_of
 
 NB. pgn, obvi
-pgn_com =: #~ 0 = [: (+. _1&(|.!.0))[: +/\ '{}'&(-/@:(=/))
-pgn_clean =: {{ pgn_com ' ' (I. LF=y)} y }}
+del_brak =: ] #~ 0 = [: (+. _1&(|.!.0)) [: +/\ (-/@:(=/))
+pgn_clean =: {{ '()' del_brak '{}' del_brak ' ' (I. LF=y)} y }}
 pgn_nonmoves =: a:,'1-0';'0-1';'1/2-1/2'
 pgn_moves =: {{ (<;._1 ' ',pgn_clean y) -. pgn_nonmoves }}
 
