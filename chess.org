@@ -389,6 +389,29 @@ start -: ]&.:fen start
 :    start -: ]&.:fen start
 : 1
 
+* Eval
+
+Want to send positions to stockfish to analyze. Stockfish works from
+something called a UCI (universal chess interface). Text in and text
+out.
+
+First command ~uci~ should be sent. Position can be set from ~position
+fen <fen>~. ~go~ is used to start off an analysis. Can specify
+depth/move time/others.
+
+Some links: 
++ https://gist.github.com/aliostad/f4470274f39d29b788c1b09519e67372
+  (this seems to be the UCI spec in github gist)
++ https://chess.stackexchange.com/questions/12580/working-with-uci-protocol-coding
+
+Can use foreign ~2!:2~ to spawn stockfish. This foreign returns two
+file numbers that are connected to stdin/stdout of subprocess (what
+about stderr?). They can be closed by ~1!:22~ when it's all done.
+
+#+name: eval-setup
+#+begin_src J :session :exports both
+#+end_src
+
 * Final program
 
 #+begin_src J :session :tangle chess.ijs :noweb yes
@@ -421,3 +444,4 @@ NB. print_z_ =: print_jchess_
 NB. san_z_ =: san_jchess_
 NB. start_z_ =: start_jchess_
 #+end_src
+

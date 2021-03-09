@@ -1,0 +1,3 @@
+
++ build database from pgn stream/figure out database schema
++ evaluate games/stockfish communication

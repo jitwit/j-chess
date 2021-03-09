@@ -111,3 +111,6 @@ NB. example bullet(s)
 
 0!:1 demos
 0!:2 cases
+
+
+fen &> game_of_pgn egrapid
