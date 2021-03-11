@@ -113,4 +113,4 @@ NB. example bullet(s)
 0!:2 cases
 
 
-fen &> game_of_pgn egrapid
+(< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
