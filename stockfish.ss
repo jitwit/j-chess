@@ -61,3 +61,10 @@
 	    ; (begin (display result) (newline))
 	    prev
 	    (lp result))))))
+
+(define (score-position fen)
+  (define result
+    ;; (analyze-position fen 18)
+    (analyze-position fen (make-time 'time-duration 0 1)))
+  (assert (and (pair? result) (eq? 'info (car result))))
+  (assq 'score (cdr result)))

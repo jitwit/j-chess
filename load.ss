@@ -4,6 +4,14 @@
 (load "uci.ss")
 (load "stockfish.ss")
 
+(define (get-lines)
+  (define in (current-input-port))
+  (let lp ((lines '()))
+    (let ((line (get-line in)))
+      (if (eof-object? line)
+	  (reverse lines)
+	  (lp `(,line ,@lines))))))
+
 (define eg-info-0
   "info depth 23 seldepth 34 multipv 1 score cp 523 nodes 4297327 nps 859293 hashfull 980 tbhits 0 time 5001 pv c3d5 c6d5 g2g3 h7h6 c2c3 d8e7 b2b3 a6a5 f3d3 c5a3 d3d5 a5a4 b3b4 a3c3 b4b5 e7c5 d5a8 c5f8 g1g2 c3c2")
 
@@ -23,7 +31,13 @@
   "6k1/4b1p1/7p/4P3/q4P2/2BQ2P1/PP5P/6K1 w - - 3 30")
 
 (define (main)
+  (define fens
+    (with-input-from-file "blitz.txt" get-lines))
   (start-stockfish)
-  ;;   (analyze-position eg-fen 20)
-  ;;   (analyze-position eg-fen (make-time 'time-duration 0 3))
-  (analyze-position eg-fen 20))
+  (for-each (lambda (fen)
+	      (display fen) (newline)
+	      (display (score-position fen))
+	      (newline))
+	    fens)
+  ;; (analyze-position eg-fen 18)
+  )
