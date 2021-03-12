@@ -51,7 +51,7 @@
       (stockfish-command (format #f "go movetime ~a"
 				 (floor
 				  (+ (* 1e3 (time-second time/depth))
-				     (/ (time-second time/depth) 1e6)))))
+				     (/ (time-nanosecond time/depth) 1e6)))))
       (stockfish-command (format #f "go depth ~a" time/depth)))
   (let lp ((prev '()))
     (let ((x (get-line (sf-out))))
@@ -64,7 +64,6 @@
 
 (define (score-position fen)
   (define result
-    ;; (analyze-position fen 18)
-    (analyze-position fen (make-time 'time-duration 0 1)))
+    (analyze-position fen (make-time 'time-duration 0 3)))
   (assert (and (pair? result) (eq? 'info (car result))))
   (assq 'score (cdr result)))

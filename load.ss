@@ -38,6 +38,5 @@
 	      (display fen) (newline)
 	      (display (score-position fen))
 	      (newline))
-	    fens)
-  ;; (analyze-position eg-fen 18)
-  )
+	    fens))
+
