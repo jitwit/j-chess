@@ -259,10 +259,6 @@ san =: 4 : 0
  if. 'O-O-O' -: 5{.x   do. 1 castle y NB. {. to avoid possible +/#
  elseif. 'O-O' -: 3{.x do. 0 castle y
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
-  NB. make sure it's most forward pawn by scanning in different
-  NB. directions for each color. (\ for white, \. for black (needs to
-  NB. work under |. because base case is 1 which leads to alternating
-  NB. pattern otherwise)
   clr =. (bw{p{"_1 brd) * bw{maskfrom x
   to =. square x
   if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
@@ -408,9 +404,7 @@ Can use foreign ~2!:2~ to spawn stockfish. This foreign returns two
 file numbers that are connected to stdin/stdout of subprocess (what
 about stderr?). They can be closed by ~1!:22~ when it's all done.
 
-#+name: eval-setup
-#+begin_src J :session :exports both
-#+end_src
+On second thought, 2!:2 kinda sucks. Will use scheme for now. 
 
 * Final program
 
