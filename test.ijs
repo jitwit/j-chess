@@ -22,6 +22,13 @@ egbullet2 =: 0 : 0
 1. e4 d6 { B00 Pirc Defense } 2. Nf3 Nf6 3. Bc4 Nxe4 4. O-O Nf6 5. d4 g6 6. Bg5 Bg7 7. Re1 O-O 8. Qd2 e6 9. Bh6 Nbd7 10. Bxg7 Kxg7 11. Nc3 c6 12. d5 exd5 13. Bf1 b5 14. b4 Bb7 15. a4 a6 16. axb5 axb5 17. Rxa8 Qxa8 18. Ne2 c5 19. bxc5 dxc5 20. Ng3 d4 21. c3 Bxf3 22. gxf3 Qxf3 23. cxd4 cxd4 24. Qxd4 Nb8 25. Re3 Qc6 26. Bg2 Qc8 27. h4 Rd8 28. Qb4 Rd1+ 29. Kh2 Qd7 30. Qb2 Rd2 31. Qe5 Rxf2 32. h5 Nc6 33. hxg6 hxg6 34. Qxb5 Ng4+ 35. Kh3 Nxe3+ 36. Kh2 Rxg2+ 37. Kh1 Qh3# { Black wins by checkmate. } 0-1
 )
 
+NB. causes error because SAN doesn't specify which knight to d2 in
+NB. move 11. the reason it doesn't is because the knight on f3 is
+NB. pinned by black's queen.
+trickypin =: 0 : 0
+1. d4 d6 2. Bf4 Nf6 3. Nf3 g6 4. e3 Bg7 5. Bd3 O-O 6. h4 c6 7. h5 Nxh5 8. Rxh5 gxh5 9. Ke2 Qd7 10. Qh1 Qg4 11. Nd2 Bf5 12. Bxf5 Qxf5 13. Qh4 Qg4 14. Qh2 Nd7 15. Rh1 e5 16. dxe5 dxe5 17. Bg3 Nf6 18. Ke1 e4 19. Ne5 Nd5 20. Nxg4 hxg4 21. Qxh7# 1-0
+)
+
 egblitzchesscom =: 0 : 0
 1. e4 {[%timestamp 1]} 1... c5 {[%timestamp 1]} 2. Nf3 {[%timestamp 17]} 2... d6
 {[%timestamp 19]} 3. d4 {[%timestamp 7]} 3... cxd4 {[%timestamp 25]} 4. Nxd4
@@ -114,3 +121,10 @@ NB. example bullet(s)
 
 (< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
 (< 'blitz.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egblitzchesscom
+
+jrdb =: ppgn &> pgn_db 1!:1 < 'jitwit.pgn'
+bad =: I. (a: -: (game_of_pgn :: a:)) &> {:"1 jrdb
+game_of_pgn
+> {: {: bad { jrdb
+
+NB. {: {."1 bad { jrdb

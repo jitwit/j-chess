@@ -74,6 +74,8 @@ disamb =: 3 : 0
  (i.8 8) = 8 #. {.src
 )
 
+disambe =: disamb :: {{ a: [ echo y }}
+
 san =: 4 : 0
  NB. produces resulting position with arguments x as move in SAN, y as
  NB. position in J representation.
@@ -82,7 +84,7 @@ san =: 4 : 0
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
   clr =. (bw{p{"_1 brd) * bw{maskfrom x
   to =. square x
-  if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
+  if. 1 < +/,clr do. clr =. disambe brd;clr;to end.
   clr =. clr + to
   to =. ,:~ (p=i.6) */ to
   brd1 =. ((bw=i.2) * to) + (-.clr) *"2 brd
@@ -143,14 +145,14 @@ game_of_pgn =: 3 : 0
  end.
 )
 
-pgn_key =: > @: {. @: (<;._1)~ '[ '&(+./ @: (=/))
-pgn_val =: strtok
+pgn_key =: > @: {. @: (<;._1)~ '[ '&(+./ @: (=/)) NB. pgn symbol token
+pgn_val =: #~ [: (~:/\ * 0&=) '"'&= NB. pgn string token
 pgn_db =: <;.1~ '[Event'&E.
 pgn_moves_sec =: I. @: ((LF,'1.')&E.)
 
 ppgn =: 3 : 0
 NB. remove abandoned?
- j =. {. (<:#y),~moves_moves_sec y=.y,LF
+ j =. {. (<:#y),~pgn_moves_sec y=.y,LF
  tagpairs =. (pgn_key;pgn_val);._2 j {. y
  movetext =. (j }. y) -. LF
  tagpairs ; movetext
