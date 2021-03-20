@@ -330,6 +330,26 @@ game_of_pgn =: 3 : 0
    fens =. fens,<brd =. (>move) san brd
  end.
 )
+
+pgn_key =: > @: {. @: (<;._1)~ '[ '&(+./ @: (=/))
+pgn_val =: strtok
+pgn_db =: <;.1~ '[Event'&E.
+pgn_moves_sec =: I. @: ((LF,'1.')&E.)
+
+ppgn =: 3 : 0
+NB. remove abandoned?
+ j =. {. (<:#y),~moves_moves_sec y=.y,LF
+ tagpairs =. (pgn_key;pgn_val);._2 j {. y
+ movetext =. (j }. y) -. LF
+ tagpairs ; movetext
+)
+#+end_src
+
+* DB
+
+#+name: db
+#+begin_src J :session :exports both
+
 #+end_src
 
 * FEN
@@ -406,6 +426,7 @@ about stderr?). They can be closed by ~1!:22~ when it's all done.
 
 On second thought, 2!:2 kinda sucks. Will use scheme for now. 
 
+
 * Final program
 
 #+begin_src J :session :tangle chess.ijs :noweb yes
@@ -432,6 +453,8 @@ NB. fen, obvi
 
 NB. pgn, obvi
 <<pgn>>
+
+<<db>>
 
 NB. fen_z_ =: fen_jchess_
 NB. print_z_ =: print_jchess_

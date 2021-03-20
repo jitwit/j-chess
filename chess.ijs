@@ -80,10 +80,6 @@ san =: 4 : 0
  if. 'O-O-O' -: 5{.x   do. 1 castle y NB. {. to avoid possible +/#
  elseif. 'O-O' -: 3{.x do. 0 castle y
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
-  NB. make sure it's most forward pawn by scanning in different
-  NB. directions for each color. (\ for white, \. for black (needs to
-  NB. work under |. because base case is 1 which leads to alternating
-  NB. pattern otherwise)
   clr =. (bw{p{"_1 brd) * bw{maskfrom x
   to =. square x
   if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
@@ -146,6 +142,21 @@ game_of_pgn =: 3 : 0
    fens =. fens,<brd =. (>move) san brd
  end.
 )
+
+pgn_key =: > @: {. @: (<;._1)~ '[ '&(+./ @: (=/))
+pgn_val =: strtok
+pgn_db =: <;.1~ '[Event'&E.
+pgn_moves_sec =: I. @: ((LF,'1.')&E.)
+
+ppgn =: 3 : 0
+NB. remove abandoned?
+ j =. {. (<:#y),~moves_moves_sec y=.y,LF
+ tagpairs =. (pgn_key;pgn_val);._2 j {. y
+ movetext =. (j }. y) -. LF
+ tagpairs ; movetext
+)
+
+
 
 NB. fen_z_ =: fen_jchess_
 NB. print_z_ =: print_jchess_

@@ -112,6 +112,5 @@ NB. example bullet(s)
 0!:1 demos
 0!:2 cases
 
-
 (< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
 (< 'blitz.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egblitzchesscom

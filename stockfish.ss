@@ -64,6 +64,7 @@
 
 (define (score-position fen)
   (define result
-    (analyze-position fen (make-time 'time-duration 0 3)))
+    ;; (analyze-position fen (make-time 'time-duration 0 3))
+    (analyze-position fen 22))
   (assert (and (pair? result) (eq? 'info (car result))))
-  (assq 'score (cdr result)))
+  result)
