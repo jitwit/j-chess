@@ -122,9 +122,3 @@ NB. example bullet(s)
 (< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
 (< 'blitz.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egblitzchesscom
 
-jrdb =: ppgn &> pgn_db 1!:1 < 'jitwit.pgn'
-bad =: I. (a: -: (game_of_pgn :: a:)) &> {:"1 jrdb
-game_of_pgn
-> {: {: bad { jrdb
-
-NB. {: {."1 bad { jrdb

@@ -84,7 +84,7 @@ san =: 4 : 0
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
   clr =. (bw{p{"_1 brd) * bw{maskfrom x
   to =. square x
-  if. 1 < +/,clr do. clr =. disambe brd;clr;to end.
+  if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
   clr =. clr + to
   to =. ,:~ (p=i.6) */ to
   brd1 =. ((bw=i.2) * to) + (-.clr) *"2 brd
