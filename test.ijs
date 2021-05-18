@@ -104,6 +104,9 @@ NB. rook disambiguates correctly when pieces are in way of one but not
 NB. other. also castling rights if rook on a8 moves.
 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK1R1 b Qkq - 1 4' -: fen 'Rg1' san fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
 
+NB. en passant capture
+'rnbqkbnr/1pp1pppp/p2P4/8/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 3' -: 'exd6' san fen^:_1 'rnbqkbnr/1pp1pppp/p7/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3'
+
 NB. running an example blitz game gives right fen at end
 '8/3K4/3p4/2pPb3/2r5/8/8/6k1 w - - 0 69' -: fen > {: game_of_pgn egblitz
 NB. example bullet(s)
@@ -121,4 +124,5 @@ NB. example bullet(s)
 
 (< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
 (< 'blitz.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egblitzchesscom
+
 
