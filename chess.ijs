@@ -42,8 +42,8 @@ MB =: _1 _1 _1 1 1 _1 1 1 M NB. bishop
 AB =: _1 _1 _1 1 1 _1 1 1 A NB. bishop
 MR =: 0 _1 0 1 _1 0 1 0 M NB. rook
 AR =: 0 _1 0 1 _1 0 1 0 A NB. rook
-MQ =: MB +. MR
-AQ =: AB +. AR
+MQ =: MB +. MR NB. queen
+AQ =: AB +. AR NB. queen
 SA =: AB`AR`AQ@.('BRQ'&i.) NB. sliding attack pieces
 
 NB. algebraic notation

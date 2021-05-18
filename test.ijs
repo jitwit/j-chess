@@ -1,4 +1,4 @@
-load 'chess.ijs stats/bonsai'
+load 'jess.ijs stats/bonsai'
 coinsert 'jchess'
 
 fendfen =: ]&.(fen^:_1)
@@ -122,8 +122,10 @@ NB. example bullet(s)
 (< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
 (< 'blitz.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egblitzchesscom
 
-'Qxe3' SAN start
+'e3' san start
 
 NB. 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK1R1 b Qkq - 1 4' -:
-fen
-'Rg1' maskm~ 0 {:: fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
+brd =: 0 {:: gm =: fen^:_1 'rnbqkbnr/pp3ppp/B1ppp3/8/8/4P3/PPPPNPPP/RNBQK2R w KQkq - 0 4'
+'Rg1' maskm~ brd
+
+

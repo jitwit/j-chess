@@ -46,7 +46,6 @@ print =: ('.',pieces) {~ +./ @: (* 1+i.@#) @: (,/)
 #+end_src
 
 #+RESULTS: basics
-: 2 6 8 8
 
 We can see the boards with the help of ~print~:
 
@@ -93,6 +92,8 @@ movesto =: _2 {. -.&((6}.pieces),'+#=') NB. should be in algebraic notation sect
 square =: (i. 8 8) = 8 #. squareix @: movesto
 #+end_src
 
+#+RESULTS: squares
+
 #+RESULTS:
 : abcdefgh
 : 87654321
@@ -111,6 +112,8 @@ NQ =: NB,NR NB. queen
 NK =: <: 3 #.^:_1 (i.9)-.4 NB. king
 NHOOD =: NP;NN;NB;NR;NQ;NK
 #+end_src
+
+#+RESULTS: neighborhoods
 
 For example:
 
@@ -165,6 +168,8 @@ MQ =: MB +. MR
 AQ =: AB +. AR
 SA =: AB`AR`AQ@.('BRQ'&i.) NB. sliding attack pieces
 #+end_src
+
+#+RESULTS: sliding-movement
 
 * Algebraic Notation
 
@@ -230,6 +235,8 @@ maskfrom =: 3 : 0
 )
 #+end_src
 
+#+RESULTS: masks
+
 ** disambiguation
 
 Sometimes two pieces can move to the same square, if not for some
@@ -254,6 +261,8 @@ disamb =: 3 : 0
 disambe =: disamb :: {{ a: [ echo y }}
 #+end_src
 
+#+RESULTS: disambiguation
+
 ** castling
 
 #+name: castling
@@ -272,6 +281,8 @@ castle =: 4 : 0
 castleq =: 1&castle
 castlek =: 0&castle
 #+end_src
+
+#+RESULTS: castling
 
 ** SAN mostrosity
 
@@ -317,6 +328,8 @@ NB. else. (maskf {.y) *"2 (_4 +./\ NP |.!.0 msk) end.
 
 #+end_src
 
+#+RESULTS: san-monstrosity
+
 For example some Blackmar-Diemer-Ryder:
 
 #+begin_src J :session :exports results :verb 0!:1
@@ -327,7 +340,7 @@ For example some Blackmar-Diemer-Ryder:
 #+begin_example
    <"0 print 0 {:: 'Qxd4' san 'Qxf3' san 'exf3' san 'f3' san 'Nf6' san 'Nc3' san 'dxe4' san 'd4' san 'd5' san 'e4' san start
 ┌─┬─┬─┬─┬─┬─┬─┬─┐
-│r│n│b│.│k│b│.│r│
+│r│n│b│q│k│b│n│r│
 ├─┼─┼─┼─┼─┼─┼─┼─┤
 │p│p│p│.│p│p│p│p│
 ├─┼─┼─┼─┼─┼─┼─┼─┤
@@ -341,7 +354,7 @@ For example some Blackmar-Diemer-Ryder:
 ├─┼─┼─┼─┼─┼─┼─┼─┤
 │P│P│P│.│.│.│P│P│
 ├─┼─┼─┼─┼─┼─┼─┼─┤
-│R│.│B│.│K│B│N│R│
+│R│N│B│Q│K│B│N│R│
 └─┴─┴─┴─┴─┴─┴─┴─┘
 #+end_example
 
@@ -382,6 +395,8 @@ NB. remove abandoned?
  tagpairs ; movetext
 )
 #+end_src
+
+#+RESULTS: pgn
 
 * DB
 
@@ -439,7 +454,7 @@ start -: ]&.:fen start
 
 #+RESULTS:
 :    fen 'Qxd4' san 'Qxf3' san 'exf3' san 'f3' san 'Nf6' san 'Nc3' san 'dxe4' san 'd4' san 'd5' san 'e4' san start
-: rnb1kb1r/ppp1pppp/5n2/8/3q4/2N2Q2/PPP3PP/R1B1KBNR w KQkq - 0 6
+: rnbqkbnr/ppp1pppp/5n2/8/3q4/2N2Q2/PPP3PP/RNBQKBNR w KQkq - 0 6
 :    start -: ]&.:fen start
 : 1
 
