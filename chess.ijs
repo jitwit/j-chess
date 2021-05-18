@@ -34,11 +34,33 @@ NQ =: NB,NR NB. queen
 NK =: <: 3 #.^:_1 (i.9)-.4 NB. king
 NHOOD =: NP;NN;NB;NR;NQ;NK
 
+MV =: {{ (+. m *. y&(|.!.0))^:_ n }} NB. moves
+AK =: {{ n ~: y |.!.0 m MV n y }} NB. attacks (moves including possibly one piece)
+M =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) MV y\ m }}
+A =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) AK y\ m }}
+MB =: _1 _1 _1 1 1 _1 1 1 M NB. bishop
+AB =: _1 _1 _1 1 1 _1 1 1 A NB. bishop
+MR =: 0 _1 0 1 _1 0 1 0 M NB. rook
+AR =: 0 _1 0 1 _1 0 1 0 A NB. rook
+MQ =: MB +. MR
+AQ =: AB +. AR
+SA =: AB`AR`AQ@.('BRQ'&i.) NB. sliding attack pieces
+
 NB. algebraic notation
 piece =: [: (* 6&~:) (6}.pieces) i. {.
-maskf =: (8 8 $ i.8) = ({.coords)&i.
-maskr =: (8 $"0 i.8) = ({:coords)&i.
-maskc =: maskr`maskf@.(e.&'abcdefgh')
+maskf =: (8 8 $ i.8) = ({.coords)&i. NB. mask file
+maskr =: (8 $"0 i.8) = ({:coords)&i. NB. mask row
+maskc =: maskr`maskf@.(e.&'abcdefgh') NB. for masking eg Nbxd2 or R3a2
+
+maskm =: 4 : 0
+ to =. (i. 8 8) = 8 #. squareix d =. _2 {. z =. y -. (6}.pieces),'x+#='
+ select. who =. piece y
+ case. IR do. (who {"_1 x) *."2 (+./^:2 x) AR to
+ case. IB do. (who {"_1 x) *."2 (+./^:2 x) AB to
+ case. IQ do. (who {"_1 x) *."2 (+./^:2 x) AQ to
+ case. IP do. (maskf {.y) *"2 (_4 +./\ NP |.!.0 to)
+ case. do. (*/maskc _2}.z) * +./ (who{::NHOOD)|.!.0 to end.
+)
 
 NB. have a target square, figure out which piece can get there.
 maskfrom =: 3 : 0
@@ -82,7 +104,7 @@ san =: 4 : 0
  if. 'O-O-O' -: 5{.x   do. 1 castle y NB. {. to avoid possible +/#
  elseif. 'O-O' -: 3{.x do. 0 castle y
  else.  'brd bw oo ep hm fm' =. y [ p =. piece x
-  clr =. (bw{p{"_1 brd) * bw{maskfrom x
+  clr =. (bw{p{"_1 brd)*bw{brd maskm x
   to =. square x
   if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
   clr =. clr + to
@@ -100,6 +122,16 @@ san =: 4 : 0
   brd1;(-.bw);oo;ep;hm;fm
  end.
 )
+
+NB. have a target square, figure out which piece can get there.
+SAN =: 4 : 0
+ 'brd bw oo ep hm fm' =. y [ p =. piece x
+ msk =. (i. 8 8) = 8 #. squareix d =. _2 {. z =. x -. (6}.pieces),'x+#='
+ src =. (<bw,p) { brd
+NB. if. p do. ,:~ (*/maskc _2}.z) * +./ (p{::NHOOD)|.!.0 msk
+NB. else. (maskf {.y) *"2 (_4 +./\ NP |.!.0 msk) end.
+)
+
 
 NB. fen, obvi
 NB. FEN helpers
