@@ -140,7 +140,7 @@ NB. fix: check castling first, as piece returns pawn for those moves.
  'brd bw oo ep hm fm' =. y
  NB. to : where piece will be
  to =. (i. 8 8) = 8 #. xy =. squareix d =. _2 {. z =. x -. (6}.pieces),'x+#='
- if. 0 = p NB. if pawn
+ if. 0 = p NB. if pawn. to add: half move counter stuff and promotion
  do. dz =. 0,~<:+:bw
      ept =. ep ,~ 2 + 3 * 1 - bw NB. en passant target index
      NB. simple pawn moves, also need to do captures & promotions
@@ -148,13 +148,16 @@ NB. fix: check castling first, as piece returns pawn for those moves.
      do. src =. (i. 8 8) = 8 #. dz+({.xy),({.coords)i.{.z NB. source
          NB. square extra clear bit in case en passant for captured
          NB. pawn
-         capenp =. (xy-:ept) * (i. 8 8) = 8#.xy+dz 
+         capenp =. (xy-:ept) *. (i. 8 8) = 8#.xy+dz 
          brd =. to (<bw,p)} brd*."2-.src+.capenp
 	 ep =. 8 NB. no en passant when capturing
      else.
       is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
       src =. (i. 8 8) = 8#.xy+dz+is2*dz NB. source square
       ep =. is2{8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
+     end.
+     if. '=' e. x NB. promotion
+     do. brd=.(to+.pix{brd) (pix=.<bw,piece{:x-.'+#x')} (-.to)*."2 brd 
      end.
  else.
  end.
