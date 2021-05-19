@@ -18,6 +18,10 @@ RNBQKBNR
 
 start =: (_6 ]\ pieces ="0 _ board0);1;1 1 1 1;8;0;1
 print =: ('.',pieces) {~ +./ @: (* 1+i.@#) @: (,/)
+display =: print @: bits
+bits =: 0&{:: NB. the bit grid
+isw =: 1&{:: NB. the is white flag
+enpf =: 3&{:: NB. en passant file flag (8 means none, otherwise indicates file)
 
 'IP IN IB IR IQ IK' =: i. 6
 coords =: 97 (,:|.)&(a.{~+&(i.8)) 49
@@ -25,6 +29,9 @@ squareix =: [: |. coords&(i."1 0)
 
 movesto =: _2 {. -.&((6}.pieces),'+#=') NB. should be in algebraic notation section?
 square =: (i. 8 8) = 8 #. squareix @: movesto
+sq =: square
+NB. x clr y (clear square x in bit grid y, x given as coordinate string)
+clr =: (-. @: sq @: [) *."2 ]
 
 NP =: (,-) 2 0,1,.i:1 NB. pawn (both black & white)
 NN =: ,/ (<:+:#:i.4) *"1/ >:=/~i.2 NB. knight
@@ -34,6 +41,9 @@ NQ =: NB,NR NB. queen
 NK =: <: 3 #.^:_1 (i.9)-.4 NB. king
 NHOOD =: NP;NN;NB;NR;NQ;NK
 
+DP =: _1 ^ 1 + isw NB. direction of pawn movement based on color for use with |.
+enp =: (i. 8 8) = 8 #. enpf ,~ 2 + 3 * 1 - isw NB. doesn't validate enpf not 8
+
 MV =: {{ (+. m *. y&(|.!.0))^:_ n }} NB. moves
 AK =: {{ n ~: y |.!.0 m MV n y }} NB. attacks (moves including possibly one piece)
 M =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) MV y\ m }}
@@ -42,8 +52,8 @@ MB =: _1 _1 _1 1 1 _1 1 1 M NB. bishop
 AB =: _1 _1 _1 1 1 _1 1 1 A NB. bishop
 MR =: 0 _1 0 1 _1 0 1 0 M NB. rook
 AR =: 0 _1 0 1 _1 0 1 0 A NB. rook
-MQ =: MB +. MR NB. queen
-AQ =: AB +. AR NB. queen
+MQ =: MB +. MR
+AQ =: AB +. AR
 SA =: AB`AR`AQ@.('BRQ'&i.) NB. sliding attack pieces
 
 NB. algebraic notation
@@ -125,11 +135,29 @@ san =: 4 : 0
 
 NB. have a target square, figure out which piece can get there.
 SAN =: 4 : 0
- 'brd bw oo ep hm fm' =. y [ p =. piece x
- msk =. (i. 8 8) = 8 #. squareix d =. _2 {. z =. x -. (6}.pieces),'x+#='
- src =. (<bw,p) { brd
-NB. if. p do. ,:~ (*/maskc _2}.z) * +./ (p{::NHOOD)|.!.0 msk
-NB. else. (maskf {.y) *"2 (_4 +./\ NP |.!.0 msk) end.
+NB. fix: check castling first, as piece returns pawn for those moves.
+ p =. piece x
+ 'brd bw oo ep hm fm' =. y
+ NB. to : where piece will be
+ to =. (i. 8 8) = 8 #. xy =. squareix d =. _2 {. z =. x -. (6}.pieces),'x+#='
+ if. 0 = p NB. if pawn
+ do. dz =. 0,~<:+:bw
+     ept =. ep ,~ 2 + 3 * 1 - bw NB. en passant target index
+     NB. simple pawn moves, also need to do captures & promotions
+     if. 'x' e. x NB. if capture
+     do. src =. (i. 8 8) = 8 #. dz+({.xy),({.coords)i.{.z NB. source
+         NB. square extra clear bit in case en passant for captured
+         NB. pawn
+         capenp =. (xy-:ept) * (i. 8 8) = 8#.xy+dz 
+         brd =. to (<bw,p)} brd*."2-.src+.capenp
+	 ep =. 8 NB. no en passant when capturing
+     else.
+      is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
+      src =. (i. 8 8) = 8#.xy+dz+is2*dz NB. source square
+      ep =. is2{8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
+     end.
+ else.
+ end.
 )
 
 
