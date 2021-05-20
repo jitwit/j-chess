@@ -165,12 +165,31 @@ NB. fix: check castling first, as piece returns pawn for those moves.
     is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
     src =. (i. 8 8) = 8#.xy+dz+is2*dz NB. source square
     ep =. is2{8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
+    brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src
    end.
    if. '=' e. x NB. promotion
    do. brd=.(to+.pix{brd) (pix=.<bw,piece{:x-.'+#x')} (-.to)*."2 brd 
    end.
+ case. IN do. NB. fixme, check and filter if still ambiguous here...
+   src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AN to
+   brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+ case. IB do. NB. fixme, check and filter if still ambiguous here...
+   src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AB to
+   brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+ case. IR do. NB. fixme, check and filter if still ambiguous here...
+   src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AR to
+   brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+ case. IQ do. NB. fixme, check and filter if still ambiguous here...
+   src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AQ to
+   brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+ case. IK do. NB. fixme, check and filter if still ambiguous here...
+   src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AK to
+   brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
  end.
- brd
+ NB. castling
+ oo =. oo * -.,_3 (2+./\])\ (_2 <@squareix\ 'h1e1a1h8e8a8') { +./^:2 brd ~: brdc
+ fm =. fm+-.bw [ hm =. (hm+1) * -. (-.({.x)e.pieces) +. ('x'e.x)
+ brd;(-.bw);oo;ep;hm;fm
 )
 
 
