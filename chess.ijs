@@ -137,7 +137,7 @@ NB. fix: check castling first, as piece returns pawn for those moves.
          NB. square extra clear bit in case en passant for captured
          NB. pawn
          capenp =. (xy-:ept) *. (i. 8 8) = 8#.xy+dz 
-         brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src+.capenp
+         brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src+.capenp
          ep =. 8 NB. no en passant when capturing
      else.
       is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
@@ -164,8 +164,8 @@ NB. fix: check castling first, as piece returns pawn for those moves.
      src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AK to
      brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
    end.
-   if. p do. ep =. 8 end. NB. non pawns don't clear en passant 
-   NB. castling
+   if. p do. ep =. 8 end. NB. non pawns clear en passant 
+   NB. castling rights
    oo =. oo * -.,_3 (2+./\])\ (_2 <@squareix\ 'h1e1a1h8e8a8') { +./^:2 brd ~: brdc
    fm =. fm+-.bw [ hm =. (hm+1) * -. (-.({.x)e.pieces) +. ('x'e.x)
    brd;(-.bw);oo;ep;hm;fm
