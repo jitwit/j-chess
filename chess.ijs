@@ -18,6 +18,10 @@ RNBQKBNR
 
 start =: (_6 ]\ pieces ="0 _ board0);1;1 1 1 1;8;0;1
 print =: ('.',pieces) {~ +./ @: (* 1+i.@#) @: (,/)
+display =: print @: bits
+bits =: 0&{:: NB. the bit grid
+isw =: 1&{:: NB. the is white flag
+enpf =: 3&{:: NB. en passant file flag (8 means none, otherwise indicates file)
 
 'IP IN IB IR IQ IK' =: i. 6
 coords =: 97 (,:|.)&(a.{~+&(i.8)) 49
@@ -25,6 +29,9 @@ squareix =: [: |. coords&(i."1 0)
 
 movesto =: _2 {. -.&((6}.pieces),'+#=') NB. should be in algebraic notation section?
 square =: (i. 8 8) = 8 #. squareix @: movesto
+sq =: square
+NB. x clr y (clear square x in bit grid y, x given as coordinate string)
+clr =: (-. @: sq @: [) *."2 ]
 
 NP =: (,-) 2 0,1,.i:1 NB. pawn (both black & white)
 NN =: ,/ (<:+:#:i.4) *"1/ >:=/~i.2 NB. knight
@@ -34,11 +41,44 @@ NQ =: NB,NR NB. queen
 NK =: <: 3 #.^:_1 (i.9)-.4 NB. king
 NHOOD =: NP;NN;NB;NR;NQ;NK
 
+DP =: _1 ^ 1 + isw NB. direction of pawn movement based on color for use with |.
+enp =: (i. 8 8) = 8 #. enpf ,~ 2 + 3 * 1 - isw NB. doesn't validate enpf not 8
+
+NB. n is source, m is mask of clear squares?
+MV =: {{ (+. m *. y&(|.!.0))^:_ n }} NB. moves
+ATK =: {{ n ~: y |.!.0 m MV n y }} NB. attacks (moves including possibly one piece)
+NB. y is source square, m is movement vector, x is bit brick
+NB. thus, in MV/ATK, n is source, m is clear squares, y is movement direction
+ATK1 =: {{ y |.!.0 n }} NB. attacks (moves including possibly one piece)
+M =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) MV y\ m }}
+A =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) ATK y\ m }}
+A1 =: 2 : '+./ (_2 ]\ m) |.!.0 y'
+NB. A1 =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) ATK1 y\ m }} M1 =: {{ y ~:
+NB. +./ _2 (y ~: -. +./^:2 x) MV y\ m }} NB. move single square
+MB =: _1 _1 _1 1 1 _1 1 1 M NB. bishop
+AB =: _1 _1 _1 1 1 _1 1 1 A NB. bishop
+MR =: 0 _1 0 1 _1 0 1 0 M NB. rook
+AR =: 0 _1 0 1 _1 0 1 0 A NB. rook
+AK =: (,NK) A1 NB. king
+AN =: (,NN) A1 NB. knight
+MQ =: MB +. MR
+AQ =: AB +. AR
+
 NB. algebraic notation
 piece =: [: (* 6&~:) (6}.pieces) i. {.
-maskf =: (8 8 $ i.8) = ({.coords)&i.
-maskr =: (8 $"0 i.8) = ({:coords)&i.
-maskc =: maskr`maskf@.(e.&'abcdefgh')
+maskf =: (8 8 $ i.8) = ({.coords)&i. NB. mask file
+maskr =: (8 $"0 i.8) = ({:coords)&i. NB. mask row
+maskc =: maskr`maskf@.(e.&'abcdefgh') NB. for masking eg Nbxd2 or R3a2
+
+maskm =: 4 : 0
+ to =. (i. 8 8) = 8 #. squareix d =. _2 {. z =. y -. (6}.pieces),'x+#='
+ select. who =. piece y
+ case. IR do. (who {"_1 x) *."2 (+./^:2 x) AR to
+ case. IB do. (who {"_1 x) *."2 (+./^:2 x) AB to
+ case. IQ do. (who {"_1 x) *."2 (+./^:2 x) AQ to
+ case. IP do. (maskf {.y) *"2 (_4 +./\ NP |.!.0 to)
+ case. do. (*/maskc _2}.z) * +./ (who{::NHOOD)|.!.0 to end.
+)
 
 NB. have a target square, figure out which piece can get there.
 maskfrom =: 3 : 0
@@ -76,28 +116,59 @@ disamb =: 3 : 0
 
 disambe =: disamb :: {{ a: [ echo y }}
 
+NB. have a target square, figure out which piece can get there.
 san =: 4 : 0
- NB. produces resulting position with arguments x as move in SAN, y as
- NB. position in J representation.
+NB. fix: check castling first, as piece returns pawn for those moves.
  if. 'O-O-O' -: 5{.x   do. 1 castle y NB. {. to avoid possible +/#
  elseif. 'O-O' -: 3{.x do. 0 castle y
- else.  'brd bw oo ep hm fm' =. y [ p =. piece x
-  clr =. (bw{p{"_1 brd) * bw{maskfrom x
-  to =. square x
-  if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
-  clr =. clr + to
-  to =. ,:~ (p=i.6) */ to
-  brd1 =. ((bw=i.2) * to) + (-.clr) *"2 brd
-  if. '=' e. x  NB. promotion  
-  do. brd1=.(square x)(<bw,piece{:x-.'+#x')}(-.pr=.square x)*"2 brd1 end.
-  NB. en passant
-  epr =. I. +/"1 epb =. | +/ IP {"_1 diff =. brd1 - brd
-  NB. castling rights
-  oo =. oo * -.,_3 (2+./\])\ (_2 <@squareix\ 'h1e1a1h8e8a8') { +./^:2 | diff
-  if. (-.p) *. (2=-~/epr) *. (*#epr) do. ep =. >./ I. epb else. ep =. 8 end.
-  NB. half moves/full moves
-  fm =. fm+-.bw [ hm =. (hm+1) * -. (-.({.x)e.pieces) +. ('x'e.x)
-  brd1;(-.bw);oo;ep;hm;fm
+ else.
+   p =. piece x
+   'brd bw oo ep hm fm' =. y
+   brdc =. brd
+   NB. to : where piece will be
+   to =. (i. 8 8) = 8 #. xy =. squareix d =. _2 {. z =. x -. (6}.pieces),'x+#='
+   select. p
+   case. IP do.
+     dz =. 0,~<:+:bw
+     ept =. ep ,~ 2 + 3 * 1 - bw NB. en passant target index
+     NB. simple pawn moves, also need to do captures & promotions
+     if. 'x' e. x NB. if capture
+     do. src =. (i. 8 8) = 8 #. dz+({.xy),({.coords)i.{.z NB. source
+         NB. square extra clear bit in case en passant for captured
+         NB. pawn
+         capenp =. (xy-:ept) *. (i. 8 8) = 8#.xy+dz 
+         brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src+.capenp
+         ep =. 8 NB. no en passant when capturing
+     else.
+      is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
+      src =. (i. 8 8) = 8#.xy+dz+is2*dz NB. source square
+      ep =. is2{8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
+      brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src
+     end.
+     if. '=' e. x NB. promotion
+     do. brd=.(to+.pix{brd) (pix=.<bw,piece{:x-.'+#x')} (-.to)*."2 brd 
+     end.
+   case. IN do. NB. fixme, check and filter if still ambiguous here...
+     src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AN to
+     brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+   case. IB do. NB. fixme, check and filter if still ambiguous here...
+     src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AB to
+     brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+   case. IR do. NB. fixme, check and filter if still ambiguous here...
+     src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AR to
+     brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+   case. IQ do. NB. fixme, check and filter if still ambiguous here...
+     src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AQ to
+     brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+   case. IK do. NB. fixme, check and filter if still ambiguous here...
+     src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AK to
+     brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+   end.
+   if. p do. ep =. 8 end. NB. non pawns clear en passant 
+   NB. castling rights
+   oo =. oo * -.,_3 (2+./\])\ (_2 <@squareix\ 'h1e1a1h8e8a8') { +./^:2 brd ~: brdc
+   fm =. fm+-.bw [ hm =. (hm+1) * -. (-.({.x)e.pieces) +. ('x'e.x)
+   brd;(-.bw);oo;ep;hm;fm
  end.
 )
 
