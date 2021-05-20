@@ -44,17 +44,25 @@ NHOOD =: NP;NN;NB;NR;NQ;NK
 DP =: _1 ^ 1 + isw NB. direction of pawn movement based on color for use with |.
 enp =: (i. 8 8) = 8 #. enpf ,~ 2 + 3 * 1 - isw NB. doesn't validate enpf not 8
 
+NB. n is source, m is mask of clear squares?
 MV =: {{ (+. m *. y&(|.!.0))^:_ n }} NB. moves
-AK =: {{ n ~: y |.!.0 m MV n y }} NB. attacks (moves including possibly one piece)
+ATK =: {{ n ~: y |.!.0 m MV n y }} NB. attacks (moves including possibly one piece)
+NB. y is source square, m is movement vector, x is bit brick
+NB. thus, in MV/ATK, n is source, m is clear squares, y is movement direction
+ATK1 =: {{ y |.!.0 n }} NB. attacks (moves including possibly one piece)
 M =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) MV y\ m }}
-A =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) AK y\ m }}
+A =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) ATK y\ m }}
+A1 =: 2 : '+./ (_2 ]\ m) |.!.0 y'
+NB. A1 =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) ATK1 y\ m }} M1 =: {{ y ~:
+NB. +./ _2 (y ~: -. +./^:2 x) MV y\ m }} NB. move single square
 MB =: _1 _1 _1 1 1 _1 1 1 M NB. bishop
 AB =: _1 _1 _1 1 1 _1 1 1 A NB. bishop
 MR =: 0 _1 0 1 _1 0 1 0 M NB. rook
 AR =: 0 _1 0 1 _1 0 1 0 A NB. rook
+AK =: (,NK) A1 NB. king
+AN =: (,NN) A1 NB. knight
 MQ =: MB +. MR
 AQ =: AB +. AR
-SA =: AB`AR`AQ@.('BRQ'&i.) NB. sliding attack pieces
 
 NB. algebraic notation
 piece =: [: (* 6&~:) (6}.pieces) i. {.
@@ -138,29 +146,31 @@ SAN =: 4 : 0
 NB. fix: check castling first, as piece returns pawn for those moves.
  p =. piece x
  'brd bw oo ep hm fm' =. y
+ brdc =. brd
  NB. to : where piece will be
  to =. (i. 8 8) = 8 #. xy =. squareix d =. _2 {. z =. x -. (6}.pieces),'x+#='
- if. 0 = p NB. if pawn. to add: half move counter stuff and promotion
- do. dz =. 0,~<:+:bw
-     ept =. ep ,~ 2 + 3 * 1 - bw NB. en passant target index
-     NB. simple pawn moves, also need to do captures & promotions
-     if. 'x' e. x NB. if capture
-     do. src =. (i. 8 8) = 8 #. dz+({.xy),({.coords)i.{.z NB. source
-         NB. square extra clear bit in case en passant for captured
-         NB. pawn
-         capenp =. (xy-:ept) *. (i. 8 8) = 8#.xy+dz 
-         brd =. to (<bw,p)} brd*."2-.src+.capenp
-	 ep =. 8 NB. no en passant when capturing
-     else.
-      is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
-      src =. (i. 8 8) = 8#.xy+dz+is2*dz NB. source square
-      ep =. is2{8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
-     end.
-     if. '=' e. x NB. promotion
-     do. brd=.(to+.pix{brd) (pix=.<bw,piece{:x-.'+#x')} (-.to)*."2 brd 
-     end.
- else.
+ select. p
+ case. IP do.
+   dz =. 0,~<:+:bw
+   ept =. ep ,~ 2 + 3 * 1 - bw NB. en passant target index
+   NB. simple pawn moves, also need to do captures & promotions
+   if. 'x' e. x NB. if capture
+   do. src =. (i. 8 8) = 8 #. dz+({.xy),({.coords)i.{.z NB. source
+       NB. square extra clear bit in case en passant for captured
+       NB. pawn
+       capenp =. (xy-:ept) *. (i. 8 8) = 8#.xy+dz 
+       brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src+.capenp
+       ep =. 8 NB. no en passant when capturing
+   else.
+    is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
+    src =. (i. 8 8) = 8#.xy+dz+is2*dz NB. source square
+    ep =. is2{8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
+   end.
+   if. '=' e. x NB. promotion
+   do. brd=.(to+.pix{brd) (pix=.<bw,piece{:x-.'+#x')} (-.to)*."2 brd 
+   end.
  end.
+ brd
 )
 
 
