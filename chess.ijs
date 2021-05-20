@@ -70,24 +70,6 @@ maskf =: (8 8 $ i.8) = ({.coords)&i. NB. mask file
 maskr =: (8 $"0 i.8) = ({:coords)&i. NB. mask row
 maskc =: maskr`maskf@.(e.&'abcdefgh') NB. for masking eg Nbxd2 or R3a2
 
-maskm =: 4 : 0
- to =. (i. 8 8) = 8 #. squareix d =. _2 {. z =. y -. (6}.pieces),'x+#='
- select. who =. piece y
- case. IR do. (who {"_1 x) *."2 (+./^:2 x) AR to
- case. IB do. (who {"_1 x) *."2 (+./^:2 x) AB to
- case. IQ do. (who {"_1 x) *."2 (+./^:2 x) AQ to
- case. IP do. (maskf {.y) *"2 (_4 +./\ NP |.!.0 to)
- case. do. (*/maskc _2}.z) * +./ (who{::NHOOD)|.!.0 to end.
-)
-
-NB. have a target square, figure out which piece can get there.
-maskfrom =: 3 : 0
- msk =. (i. 8 8) = 8 #. squareix d =. _2 {. z =. y -. (6}.pieces),'x+#='
- p =. piece y  NB. pawn = 0, so if. works
- if. p do. ,:~ (*/maskc _2}.z) * +./ (p{::NHOOD)|.!.0 msk
- else. (maskf {.y) *"2 (_4 +./\ NP |.!.0 msk) end.
-)
-
 NB. x = 0 or 1 means king or queen sides resp, y is position
 castle =: 4 : 0
  'brd bw oo ep hm fm' =. y
@@ -102,19 +84,7 @@ castle =: 4 : 0
 castleq =: 1&castle
 castlek =: 0&castle
 
-disamb =: 3 : 0
- 'brd clr to' =. y
- pcs =. +./^:2 brd
- z_t =. {.4$.$.to NB. only 1 square here
- z_s =. 4$.$.clr
- tab =. z_t -"1/~ z_s
- mag =. >./"1 | tab
- dir =. * tab
- src =. z_s #~ 1 = dir ([: +/ pcs {~ [: <"1 z_t +"1 (1+i.@]) */ [)"1 0 mag
- (i.8 8) = 8 #. {.src
-)
 
-disambe =: disamb :: {{ a: [ echo y }}
 
 NB. have a target square, figure out which piece can get there.
 san =: 4 : 0
