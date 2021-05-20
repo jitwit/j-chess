@@ -1,4 +1,4 @@
-load 'jess.ijs stats/bonsai'
+load 'chess.ijs stats/bonsai'
 coinsert 'jchess'
 
 fendfen =: ]&.(fen^:_1)

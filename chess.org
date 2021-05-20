@@ -310,82 +310,61 @@ moment) assumed the input pgn/move/state is valid and consistent.
 
 #+name: san-monstrosity
 #+begin_src J :session :exports both
+NB. have a target square, figure out which piece can get there.
 san =: 4 : 0
- NB. produces resulting position with arguments x as move in SAN, y as
- NB. position in J representation.
+NB. fix: check castling first, as piece returns pawn for those moves.
  if. 'O-O-O' -: 5{.x   do. 1 castle y NB. {. to avoid possible +/#
  elseif. 'O-O' -: 3{.x do. 0 castle y
- else.  'brd bw oo ep hm fm' =. y [ p =. piece x
-  clr =. (bw{p{"_1 brd)*bw{brd maskm x
-  to =. square x
-  if. 1 < +/,clr do. clr =. disamb brd;clr;to end.
-  clr =. clr + to
-  to =. ,:~ (p=i.6) */ to
-  brd1 =. ((bw=i.2) * to) + (-.clr) *"2 brd
-  if. '=' e. x  NB. promotion  
-  do. brd1=.(square x)(<bw,piece{:x-.'+#x')}(-.pr=.square x)*"2 brd1 end.
-  NB. en passant
-  epr =. I. +/"1 epb =. | +/ IP {"_1 diff =. brd1 - brd
-  NB. castling rights
-  oo =. oo * -.,_3 (2+./\])\ (_2 <@squareix\ 'h1e1a1h8e8a8') { +./^:2 | diff
-  if. (-.p) *. (2=-~/epr) *. (*#epr) do. ep =. >./ I. epb else. ep =. 8 end.
-  NB. half moves/full moves
-  fm =. fm+-.bw [ hm =. (hm+1) * -. (-.({.x)e.pieces) +. ('x'e.x)
-  brd1;(-.bw);oo;ep;hm;fm
+ else.
+   p =. piece x
+   'brd bw oo ep hm fm' =. y
+   brdc =. brd
+   NB. to : where piece will be
+   to =. (i. 8 8) = 8 #. xy =. squareix d =. _2 {. z =. x -. (6}.pieces),'x+#='
+   select. p
+   case. IP do.
+     dz =. 0,~<:+:bw
+     ept =. ep ,~ 2 + 3 * 1 - bw NB. en passant target index
+     NB. simple pawn moves, also need to do captures & promotions
+     if. 'x' e. x NB. if capture
+     do. src =. (i. 8 8) = 8 #. dz+({.xy),({.coords)i.{.z NB. source
+         NB. square extra clear bit in case en passant for captured
+         NB. pawn
+         capenp =. (xy-:ept) *. (i. 8 8) = 8#.xy+dz 
+         brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src+.capenp
+         ep =. 8 NB. no en passant when capturing
+     else.
+      is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
+      src =. (i. 8 8) = 8#.xy+dz+is2*dz NB. source square
+      ep =. is2{8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
+      brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src
+     end.
+     if. '=' e. x NB. promotion
+     do. brd=.(to+.pix{brd) (pix=.<bw,piece{:x-.'+#x')} (-.to)*."2 brd 
+     end.
+   case. IN do. NB. fixme, check and filter if still ambiguous here...
+     src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AN to
+     brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+   case. IB do. NB. fixme, check and filter if still ambiguous here...
+     src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AB to
+     brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+   case. IR do. NB. fixme, check and filter if still ambiguous here...
+     src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AR to
+     brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+   case. IQ do. NB. fixme, check and filter if still ambiguous here...
+     src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AQ to
+     brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+   case. IK do. NB. fixme, check and filter if still ambiguous here...
+     src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AK to
+     brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
+   end.
+   if. p do. ep =. 8 end. NB. non pawns don't clear en passant 
+   NB. castling
+   oo =. oo * -.,_3 (2+./\])\ (_2 <@squareix\ 'h1e1a1h8e8a8') { +./^:2 brd ~: brdc
+   fm =. fm+-.bw [ hm =. (hm+1) * -. (-.({.x)e.pieces) +. ('x'e.x)
+   brd;(-.bw);oo;ep;hm;fm
  end.
 )
-
-NB. have a target square, figure out which piece can get there.
-SAN =: 4 : 0
-NB. fix: check castling first, as piece returns pawn for those moves.
- p =. piece x
- 'brd bw oo ep hm fm' =. y
- brdc =. brd
- NB. to : where piece will be
- to =. (i. 8 8) = 8 #. xy =. squareix d =. _2 {. z =. x -. (6}.pieces),'x+#='
- select. p
- case. IP do.
-   dz =. 0,~<:+:bw
-   ept =. ep ,~ 2 + 3 * 1 - bw NB. en passant target index
-   NB. simple pawn moves, also need to do captures & promotions
-   if. 'x' e. x NB. if capture
-   do. src =. (i. 8 8) = 8 #. dz+({.xy),({.coords)i.{.z NB. source
-       NB. square extra clear bit in case en passant for captured
-       NB. pawn
-       capenp =. (xy-:ept) *. (i. 8 8) = 8#.xy+dz 
-       brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src+.capenp
-       ep =. 8 NB. no en passant when capturing
-   else.
-    is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
-    src =. (i. 8 8) = 8#.xy+dz+is2*dz NB. source square
-    ep =. is2{8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
-    brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src
-   end.
-   if. '=' e. x NB. promotion
-   do. brd=.(to+.pix{brd) (pix=.<bw,piece{:x-.'+#x')} (-.to)*."2 brd 
-   end.
- case. IN do. NB. fixme, check and filter if still ambiguous here...
-   src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AN to
-   brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
- case. IB do. NB. fixme, check and filter if still ambiguous here...
-   src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AB to
-   brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
- case. IR do. NB. fixme, check and filter if still ambiguous here...
-   src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AR to
-   brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
- case. IQ do. NB. fixme, check and filter if still ambiguous here...
-   src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AQ to
-   brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
- case. IK do. NB. fixme, check and filter if still ambiguous here...
-   src =. ((<bw,p){brd) *. (*./maskc _2}.z) *. brd AK to
-   brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
- end.
- NB. castling
- oo =. oo * -.,_3 (2+./\])\ (_2 <@squareix\ 'h1e1a1h8e8a8') { +./^:2 brd ~: brdc
- fm =. fm+-.bw [ hm =. (hm+1) * -. (-.({.x)e.pieces) +. ('x'e.x)
- brd;(-.bw);oo;ep;hm;fm
-)
-
 #+end_src
 
 #+RESULTS: san-monstrosity
