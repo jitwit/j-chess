@@ -107,6 +107,9 @@ NB. other. also castling rights if rook on a8 moves.
 NB. en passant capture
 'rnbqkbnr/1pp1pppp/p2P4/8/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 3' -: fen 'exd6' san fen^:_1 'rnbqkbnr/1pp1pppp/p7/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3'
 
+NB. disambiguate discovered check(!)
+'k7/6b1/8/5N2/3N4/2K5/8/8 b - - 1 1' -: fen 'Nf5' san fen^:_1 'k7/6b1/8/8/3N4/2K1N3/8/8 w - - 0 1'
+
 NB. running an example blitz game gives right fen at end
 '8/3K4/3p4/2pPb3/2r5/8/8/6k1 w - - 0 69' -: fen > {: game_of_pgn egblitz
 NB. example bullet(s)
@@ -124,8 +127,3 @@ NB. example bullet(s)
 
 (< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
 (< 'blitz.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egblitzchesscom
-'' [ 'Nf5' san fen^:_1 'k7/6b1/8/8/3N4/2K1N3/8/8 w - - 0 1'
-IN {"_1 bits 'Nf5' san fen^:_1 'k7/6b1/8/8/3N4/2K1N3/8/8 w - - 0 1'
-
-
-
