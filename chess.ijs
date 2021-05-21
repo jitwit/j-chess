@@ -111,8 +111,9 @@ san =: 4 : 0
          ep =. 8 NB. no en passant when capturing
      else.
       is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
+      epc =. *./ , to *. +./ _1 1 |.!.0"0 1/ (<(-.bw),IP){brd
       src =. (i. 8 8) = 8#.xy+dz+is2*dz NB. source square
-      ep =. is2{8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
+      ep =. (epc*.is2){8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
       brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src
      end.
      if. '=' e. x NB. promotion
