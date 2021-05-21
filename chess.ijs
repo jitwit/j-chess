@@ -97,8 +97,29 @@ san =: 4 : 0
    brd0 =. brd
    NB. to : where piece will be
    to =. (i. 8 8) = 8 #. xy =. squareix d =. _2 {. z =. x -. (6}.pieces),'x+#='
-   select. p
-   case. IP do.
+   if. p NB. non pawn move
+   do. select. p
+     case. IN do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AN to
+     case. IB do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AB to
+     case. IR do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AR to
+     case. IQ do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AQ to
+     case. IK do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AK to end.
+     if. p do.
+       if. 1 < +/,src do. NB. need to disambiguate (discovered pinned
+  			NB. checks are the problem, but i'm sure other
+  			NB. edge cases will pop up)
+         for_s. ((i. 8 8) =/~ I.@:,) src do. NB. try each possible move
+           brd =. ((-.s)*.to+.(<bw,p){brd0) (<bw,p)} brd0*."2-.to+.s
+           NB. need to check current color's king not left in check
+           if. 0 = +/,((<bw,IK){brd) * brd ATKSMm -.bw do. break. end.
+         end.
+       else.
+         brd =. ((-.src)*.to+.(<bw,p){brd0) (<bw,p)} brd0*."2-.to+.src
+       end.
+       ep =. 8
+       oo =. oo*-.,_3(2+./\])\(_2<@squareix\'h1e1a1h8e8a8'){+./^:2 brd~:brd0
+     end.
+   else. NB. pawn move
      dz =. 0,~<:+:bw
      ept =. ep ,~ 2 + 3 * 1 - bw NB. en passant target index
      NB. simple pawn moves, also need to do captures & promotions
@@ -117,27 +138,8 @@ san =: 4 : 0
       brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src
      end.
      if. '=' e. x NB. promotion
-     do. brd=.(to+.pix{brd) (pix=.<bw,piece{:x-.'+#x')} (-.to)*."2 brd 
+     do. brd=.(to+.pix{brd) (pix=.<bw,piece{:x-.'+#x')} (-.to)*."2 brd
      end.
-   case. IN do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AN to
-   case. IB do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AB to
-   case. IR do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AR to
-   case. IQ do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AQ to
-   case. IK do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AK to end.
-   if. p do.
-     if. 1 < +/,src do. NB. need to disambiguate (discovered pinned
-			NB. checks are the problem, but i'm sure other
-			NB. edge cases will pop up)
-       for_s. ((i. 8 8) =/~ I.@:,) src do. NB. try each possible move
-         brd =. ((-.s)*.to+.(<bw,p){brd0) (<bw,p)} brd0*."2-.to+.s
-         NB. need to check current color's king not left in check
-         if. 0 = +/,((<bw,IK){brd) * brd ATKSMm -.bw do. break. end.
-       end.
-     else.
-       brd =. ((-.src)*.to+.(<bw,p){brd0) (<bw,p)} brd0*."2-.to+.src
-     end.
-     ep =. 8
-     oo =. oo * -.,_3 (2+./\])\ (_2 <@squareix\ 'h1e1a1h8e8a8') { +./^:2 brd ~: brd0
    end.
    fm =. fm+-.bw [ hm =. (hm+1) * -. (-.({.x)e.pieces) +. ('x'e.x)
    brd;(-.bw);oo;ep;hm;fm
