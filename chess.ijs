@@ -74,7 +74,7 @@ maskr =: (8 $"0 i.8) = ({:coords)&i. NB. mask row
 maskc =: maskr`maskf@.(e.&'abcdefgh') NB. for masking eg Nbxd2 or R3a2
 
 NB. x = 0 or 1 means king or queen sides resp, y is position
-castle =: 4 : 0
+OO =: 4 : 0
  'brd bw oo ep hm fm' =. y
  oo =. oo * (-+:<:+:bw) |.!.0 oo
  if. x do. if. bw do. 'k r' =. 'c1';'a1d1' else. 'k r' =. 'c8';'a8d8' end.
@@ -84,13 +84,13 @@ castle =: 4 : 0
  brd =. ((square k),:rm)((<bw,IK),(<bw,IR))}brd
  brd;(-.bw);oo;ep;(hm+1);(fm+-.bw)
 )
-castleq =: 1&castle
-castlek =: 0&castle
+O_O_O =: 1&OO
+O_O =: 0&OO
 
 NB. have a target square, figure out which piece can get there.
 san =: 4 : 0
- if. 'O-O-O' -: 5{.x   do. 1 castle y NB. {. to avoid possible +/#
- elseif. 'O-O' -: 3{.x do. 0 castle y
+ if. 'O-O-O' -: 5{.x   do. O_O_O y NB. {. to avoid possible +/#
+ elseif. 'O-O' -: 3{.x do. O_O y
  else.
    p =. piece x
    'brd bw oo ep hm fm' =. y
