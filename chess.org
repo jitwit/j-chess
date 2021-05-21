@@ -317,7 +317,7 @@ NB. fix: check castling first, as piece returns pawn for those moves.
    case. IK do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AK to end.
  NB. if src has multiple bits on, make the change for each and check
  NB. for illegal positions... should work?
-  echo (;#) ((i. 8 8) =/~ I.@:,) src
+NB.  echo (;#) ((i. 8 8) =/~ I.@:,) src
    if. p do.
      brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
      ep =. 8
@@ -327,10 +327,6 @@ NB. fix: check castling first, as piece returns pawn for those moves.
    brd;(-.bw);oo;ep;hm;fm
  end.
 )
-
-incheck =: 
-
-
 #+end_src
 
 #+RESULTS: san-monstrosity
@@ -345,7 +341,7 @@ For example some Blackmar-Diemer-Ryder:
 #+begin_example
    <"0 print 0 {:: 'Qxd4' san 'Qxf3' san 'exf3' san 'f3' san 'Nf6' san 'Nc3' san 'dxe4' san 'd4' san 'd5' san 'e4' san start
 ┌─┬─┬─┬─┬─┬─┬─┬─┐
-│r│n│b│q│k│b│n│r│
+│r│n│b│.│k│b│.│r│
 ├─┼─┼─┼─┼─┼─┼─┼─┤
 │p│p│p│.│p│p│p│p│
 ├─┼─┼─┼─┼─┼─┼─┼─┤
@@ -359,7 +355,7 @@ For example some Blackmar-Diemer-Ryder:
 ├─┼─┼─┼─┼─┼─┼─┼─┤
 │P│P│P│.│.│.│P│P│
 ├─┼─┼─┼─┼─┼─┼─┼─┤
-│R│N│B│Q│K│B│N│R│
+│R│.│B│.│K│B│N│R│
 └─┴─┴─┴─┴─┴─┴─┴─┘
 #+end_example
 

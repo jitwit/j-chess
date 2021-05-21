@@ -126,8 +126,8 @@ NB. fix: check castling first, as piece returns pawn for those moves.
    case. IK do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AK to end.
  NB. if src has multiple bits on, make the change for each and check
  NB. for illegal positions... should work?
-  echo (;#) ((i. 8 8) =/~ I.@:,) src
-   if. p do. 
+NB.  echo (;#) ((i. 8 8) =/~ I.@:,) src
+   if. p do.
      brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.to+.src
      ep =. 8
      oo =. oo * -.,_3 (2+./\])\ (_2 <@squareix\ 'h1e1a1h8e8a8') { +./^:2 brd ~: brdc
