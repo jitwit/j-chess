@@ -179,12 +179,18 @@ pgn_nonmoves =: a:,'1-0';'0-1';'1/2-1/2'
 pgn_moves =: {{ del_num del_com (<;._1 ' ',pgn_clean y) -. pgn_nonmoves }}
 
 NB. x =. x -. '?! ' NB. remove move quality commentary
+NB. take pgn movetext and build all states of game
 game_of_pgn =: 3 : 0
  moves =. pgn_moves y
  fens =. < brd =. start
  for_move. moves do.
    fens =. fens,<brd =. (>move) san brd
  end.
+)
+
+NB. take pgn movetext and return final position
+final_of_pgn =: 3 : 0
+ for_move. moves =. pgn_moves y [ brd =. start do. brd =. (>move) san brd end. brd
 )
 
 pgn_key =: > @: {. @: (<;._1)~ '[ '&(+./ @: (=/)) NB. pgn symbol token
