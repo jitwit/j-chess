@@ -71,8 +71,8 @@ demos =: 0 : 0
 
 cases =: 0 : 0
 NB. check that e8 is black king and b1 is white knight
-'k' -: (<squareix 'e8') { print 0 {:: start
-'N' -: (<squareix 'b1') { print 0 {:: start
+'k' -: (<SQix 'e8') { print 0 {:: start
+'N' -: (<SQix 'b1') { print 0 {:: start
 
 NB. convert to and from fen after some sicillian
 checkfen 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
@@ -132,4 +132,3 @@ NB. example bullet(s)
 
 (< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
 (< 'blitz.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egblitzchesscom
-

@@ -43,10 +43,7 @@ RNBQKBNR
 
 start =: (_6 ]\ pieces ="0 _ board0);1;1 1 1 1;8;0;1
 print =: ('.',pieces) {~ +./ @: (* 1+i.@#) @: (,/)
-display =: print @: bits
-bits =: 0&{:: NB. the bit grid
-isw =: 1&{:: NB. the is white flag
-enpf =: 3&{:: NB. en passant file flag (8 means none, otherwise indicates file)
+display =: print @: (0&{::)
 #+end_src
 
 #+RESULTS: basics
@@ -90,13 +87,11 @@ returns its index in an 8x8 grid.
 #+begin_src J :session :exports both
 'IP IN IB IR IQ IK' =: i. 6
 coords =: 97 (,:|.)&(a.{~+&(i.8)) 49
-squareix =: [: |. coords&(i."1 0)
+SQix =: [: |. coords&(i."1 0)
 
 movesto =: _2 {. -.&((6}.pieces),'+#=') NB. should be in algebraic notation section?
-square =: (i. 8 8) = 8 #. squareix @: movesto
+SQ =: (i. 8 8) = 8 #. SQix @: movesto
 sq =: square
-NB. x clr y (clear square x in bit grid y, x given as coordinate string)
-clr =: (-. @: sq @: [) *."2 ]
 #+end_src
 
 #+RESULTS: squares
@@ -129,7 +124,7 @@ For example:
 
 #+begin_src J :session :exports results :verb 0!:1
 NN NB. knight moves
-<"0 ' x@' {~ NN (+:@] + +./@:(|.!.0)) square 'b5' NB. knight's moves from b5
+<"0 ' x@' {~ NN (+:@] + +./@:(|.!.0)) SQ 'b5' NB. knight's moves from b5
 #+end_src
 
 #+RESULTS:
@@ -143,7 +138,7 @@ _1  2
  1 _2
  2  1
  1  2
-   <"0 ' x@' {~ NN (+:@] + +./@:(|.!.0)) square 'b5' NB. knight's moves from b5
+   <"0 ' x@' {~ NN (+:@] + +./@:(|.!.0)) SQ 'b5' NB. knight's moves from b5
 ┌─┬─┬─┬─┬─┬─┬─┬─┐
 │ │ │ │ │ │ │ │ │
 ├─┼─┼─┼─┼─┼─┼─┼─┤
@@ -187,7 +182,7 @@ MQ =: MB +. MR
 AQ =: AB +. AR
 
 NB. x ATKSMn y -- attacks from major + minor pieces in position x from color y
-ATKSMm =: {{(x AN IN{y{x)+(x AB IB{y{x)+(x AR IR{y{x)+(x AQ IQ{y{x)}}
+ATKSMm =: {{(x AN IN{y{x)+.(x AB IB{y{x)+.(x AR IR{y{x)+.(x AQ IQ{y{x)}}
 #+end_src
 
 #+RESULTS: sliding-movement
@@ -249,8 +244,8 @@ OO =: 4 : 0
  if. x do. if. bw do. 'k r' =. 'c1';'a1d1' else. 'k r' =. 'c8';'a8d8' end.
  else.     if. bw do. 'k r' =. 'g1';'f1h1' else. 'k r' =. 'g8';'f8h8' end.
  end.
- rm =. (+./ _2 square\ r) ~: (<bw,IR) { brd
- brd =. ((square k),:rm)((<bw,IK),(<bw,IR))}brd
+ rm =. (+./ _2 SQ\ r) ~: (<bw,IR) { brd
+ brd =. ((SQ k),:rm)((<bw,IK),(<bw,IR))}brd
  brd;(-.bw);oo;ep;(hm+1);(fm+-.bw)
 )
 O_O_O =: 1&OO
@@ -276,7 +271,7 @@ san =: 4 : 0
    'brd bw oo ep hm fm' =. y
    brd0 =. brd
    NB. to : where piece will be
-   to =. (i. 8 8) = 8 #. xy =. squareix d =. _2 {. z =. x -. (6}.pieces),'x+#='
+   to =. (i. 8 8) = 8 #. xy =. SQix d =. _2 {. z =. x -. (6}.pieces),'x+#='
    if. p NB. non pawn move
    do. select. p
      case. IN do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AN to
@@ -291,13 +286,13 @@ san =: 4 : 0
          for_s. ((i. 8 8) =/~ I.@:,) src do. NB. try each possible move
            brd =. ((-.s)*.to+.(<bw,p){brd0) (<bw,p)} brd0*."2-.to+.s
            NB. need to check current color's king not left in check
-           if. 0 = +/,((<bw,IK){brd) * brd ATKSMm -.bw do. break. end.
+           if. 0 = +./,((<bw,IK){brd) *. brd ATKSMm -.bw do. break. end.
          end.
        else.
          brd =. ((-.src)*.to+.(<bw,p){brd0) (<bw,p)} brd0*."2-.to+.src
        end.
        ep =. 8
-       oo =. oo*-.,_3(2+./\])\(_2<@squareix\'h1e1a1h8e8a8'){+./^:2 brd~:brd0
+       oo =. oo*-.,_3(2+./\])\(_2<@SQix\'h1e1a1h8e8a8'){+./^:2 brd~:brd0
      end.
    else. NB. pawn move
      dz =. 0,~<:+:bw
@@ -443,7 +438,7 @@ pos_of =: 3 : 0
  NB. our representation from a fen
  'brd bw oo ep hm fm' =. <;._1 ' ',y
  NB. careful that bw isn't array?
- (dfen brd);('w'={.bw);('KQkq'e.oo);({:(squareix :: 8:)ep);hm;&".fm
+ (dfen brd);('w'={.bw);('KQkq'e.oo);({:(SQix :: 8:)ep);hm;&".fm
 )
 
 NB. fen to encode, fen^:_1 to decode
