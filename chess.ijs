@@ -106,8 +106,8 @@ san =: 4 : 0
      case. IK do. src =. ((<bw,p){brd)*.(*./maskc _2}.z)*.brd AK to end.
      if. p do.
        if. 1 < +/,src do. NB. need to disambiguate (discovered pinned
-  			NB. checks are the problem, but i'm sure other
-  			NB. edge cases will pop up)
+                        NB. checks are the problem, but i'm sure other
+                        NB. edge cases will pop up)
          for_s. ((i. 8 8) =/~ I.@:,) src do. NB. try each possible move
            brd =. ((-.s)*.to+.(<bw,p){brd0) (<bw,p)} brd0*."2-.to+.s
            NB. need to check current color's king not left in check

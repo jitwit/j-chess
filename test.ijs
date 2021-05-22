@@ -6,6 +6,10 @@ checkfen =: -: fendfen
 
 NB. 12, 22, 43 from egblitz have been issues, maybe add them
 NB. specifically as test cases
+egclassic =: 0 : 0
+1. e4 e6 2. d3 { C00 French Defense: King's Indian Attack } d5 3. Nd2 Nf6 4. Ngf3 c5 5. g3 Nc6 6. Bg2 Qc7 7. O-O Be7 8. Re1 O-O 9. e5 Nd7 10. Qe2 b6?! { (-0.82 → -0.12) Inaccuracy. b5 was best. } (10... b5) 11. h4 Bb7 12. Nf1 Rac8 13. c3 h6?! { (0.07 → 0.60) Inaccuracy. b5 was best. } (13... b5) 14. Bf4 a5?! { (0.46 → 1.31) Inaccuracy. d4 was best. } (14... d4 15. N1h2 dxc3 16. bxc3 Rfd8 17. Ng4 Bf8 18. a4 Kh8 19. Nd2 Ne7 20. Bxb7 Qxb7 21. Ne4) 15. a4?! { (1.31 → 0.63) Inaccuracy. Ne3 was best. } (15. Ne3) 15... Qb8? { (0.63 → 1.89) Mistake. Rfd8 was best. } (15... Rfd8 16. N1h2) 16. N1h2?! { (1.89 → 1.21) Inaccuracy. Ne3 was best. } (16. Ne3) 16... Bd8?! { (1.21 → 2.01) Inaccuracy. Rfe8 was best. } (16... Rfe8 17. Ng4 Bf8 18. d4 cxd4 19. Nxd4 Nxd4 20. cxd4 Rc4 21. Rad1 Bc6 22. b3 Rb4 23. Nxh6+) 17. Qd2 Kh7 18. h5? { (2.21 → 0.93) Mistake. Ng4 was best. } (18. Ng4) 18... Bc7?? { (0.93 → 2.82) Blunder. d4 was best. } (18... d4 19. Ng4 Rh8 20. Qe2 Rg8 21. Nd2 Ne7 22. Bxb7 Qxb7 23. Nc4 Bc7 24. Na3 Kh8 25. Nb5) 19. Ng4?? { (2.82 → 1.07) Blunder. d4 was best. } (19. d4 f5) 19... Ne7?? { (1.07 → 4.60) Blunder. d4 was best. } (19... d4) 20. Bxh6 Nf5 21. Bxg7 Rg8 22. h6 d4 23. Ng5+ Kg6 24. Nh3 Bxg2 25. Qg5+ Kh7 26. Kxg2 Bxe5 27. Rxe5 Nxe5?! { (11.87 → Mate in 1) Checkmate is now unavoidable. Rxg7 was best. } (27... Rxg7 28. hxg7) 28. Nf6# { White wins by checkmate. } 1-0
+)
+
 egblitz =: 0 : 0
 1. f4 Nf6 2. Nf3 g6 3. e3 Bg7 4. d4 d6 5. Be2 O-O 6. O-O Nbd7 7. c4 c5 8. d5 Re8 9. Qc2 e5 10. Re1 exf4 11. exf4 Nb6 12. Nc3 Bf5 13. Qd1 Re7 14. Bd2 Qe8 15. Rc1 a6 16. h3 Nbd7 17. g4 Be4 18. Ng5 h6 19. Ngxe4 Nxe4 20. Nxe4 Rxe4 21. Bf3 Rxe1+ 22. Qxe1 Qxe1+ 23. Rxe1 Kf8 24. b3 b5 25. Kf2 bxc4 26. bxc4 Nb6 27. Rc1 Bd4+ 28. Be3 Bb2 29. Rc2 Bg7 30. Be2 Re8 31. Kf3 Na4 32. h4 Nc3 33. g5 Nxe2 34. Kxe2 Bd4 35. gxh6 Rxe3+ 36. Kd2 Rh3 37. f5 Rxh4 38. fxg6 fxg6 39. Kd3 Rxh6 40. Ke4 Kg7 41. a4 a5 42. Rg2 Rh4+ 43. Kd3 Be5 44. Rf2 Kh6 45. Rf8 Rh3+ 46. Ke4 Bc3 47. Rd8 Be5 48. Ra8 Bc3 49. Rd8 Rh4+ 50. Kd3 Be5 51. Ra8 g5 52. Rxa5 g4 53. Ra7 g3 54. Ra8 g2 55. Rg8 Rh2 56. Rg4 Kh5 57. Rg7 Kh4 58. Rh7+ Kg3 59. Rf7 Kh3 60. Rh7+ Kg3 61. Rf7 g1=Q 62. Rf8 Kg2 63. Rg8+ Kf1 64. Rxg1+ Kxg1 65. Ke4 Rh8 66. Kf5 Ra8 67. Ke6 Rxa4 68. Kd7 Rxc4 0-1
 )
@@ -120,6 +124,7 @@ NB. example bullet(s)
 '5k2/8/1q3PQp/6b1/1B6/P5P1/1P4KP/8 b - - 4 39' -: fen > {: game_of_pgn egrapid
 '5rk1/pp3ppp/2p1p3/6P1/7P/b7/Kq6/1B1b4 w - - 0 33' -: fen _1 {:: game_of_pgn egblitz3
 '7r/3nk2p/p2p1p2/4pP2/2p4P/P3B3/1rP3q1/R1N1KR2 w Q - 0 25' -: fen _1 {::game_of_pgn egblitzchesscom
+'1qr3r1/5pBk/1p2pN1P/p1p1nnQ1/P2p4/2PP2PN/1P3PK1/R7 b - - 1 28' -: fen final_of_pgn egclassic
 )
 
 0!:1 demos
@@ -127,3 +132,4 @@ NB. example bullet(s)
 
 (< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
 (< 'blitz.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egblitzchesscom
+
