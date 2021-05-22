@@ -26,7 +26,6 @@ SQix =: [: |. coords&(i."1 0)
 
 movesto =: _2 {. -.&((6}.pieces),'+#=') NB. should be in algebraic notation section?
 SQ =: (i. 8 8) = 8 #. SQix @: movesto
-sq =: square
 
 NP =: (,-) 2 0,1,.i:1 NB. pawn (both black & white)
 NN =: ,/ (<:+:#:i.4) *"1/ >:=/~i.2 NB. knight
@@ -36,20 +35,14 @@ NQ =: NB,NR NB. queen
 NK =: <: 3 #.^:_1 (i.9)-.4 NB. king
 NHOOD =: NP;NN;NB;NR;NQ;NK
 
-DP =: _1 ^ 1 + isw NB. direction of pawn movement based on color for use with |.
-enp =: (i. 8 8) = 8 #. enpf ,~ 2 + 3 * 1 - isw NB. doesn't validate enpf not 8
-
 NB. n is source, m is mask of clear squares?
 MV =: {{ (+. m *. y&(|.!.0))^:_ n }} NB. moves
 ATK =: {{ n ~: y |.!.0 m MV n y }} NB. attacks (moves including possibly one piece)
 NB. y is source square, m is movement vector, x is bit brick
 NB. thus, in MV/ATK, n is source, m is clear squares, y is movement direction
-ATK1 =: {{ y |.!.0 n }} NB. attacks (moves including possibly one piece)
 M =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) MV y\ m }}
 A =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) ATK y\ m }}
 A1 =: 2 : '+./ (_2 ]\ m) |.!.0 y'
-NB. A1 =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) ATK1 y\ m }} M1 =: {{ y ~:
-NB. +./ _2 (y ~: -. +./^:2 x) MV y\ m }} NB. move single square
 MB =: _1 _1 _1 1 1 _1 1 1 M NB. bishop
 AB =: _1 _1 _1 1 1 _1 1 1 A NB. bishop
 MR =: 0 _1 0 1 _1 0 1 0 M NB. rook

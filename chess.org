@@ -15,7 +15,7 @@ Letters for pieces and a starting board. The representation:
   white's. 
 + The player's move is an index 0 or 1 into that bitboard table,
   starting at 1 for white to move.
-+ Castling rights are indicated with a length for array for white's
++ Castling rights are indicated with a length four array for white's
   king & queen sides then black's king & queen sides rights.
 + En passant is represented by a column (0-7). Based on whose turn it
   is this is sufficient to determine the target square, as the only
@@ -91,7 +91,6 @@ SQix =: [: |. coords&(i."1 0)
 
 movesto =: _2 {. -.&((6}.pieces),'+#=') NB. should be in algebraic notation section?
 SQ =: (i. 8 8) = 8 #. SQix @: movesto
-sq =: square
 #+end_src
 
 #+RESULTS: squares
@@ -113,9 +112,6 @@ NR =: (,-) (,.&0,0&,.) }. i.8 NB. rook
 NQ =: NB,NR NB. queen
 NK =: <: 3 #.^:_1 (i.9)-.4 NB. king
 NHOOD =: NP;NN;NB;NR;NQ;NK
-
-DP =: _1 ^ 1 + isw NB. direction of pawn movement based on color for use with |.
-enp =: (i. 8 8) = 8 #. enpf ,~ 2 + 3 * 1 - isw NB. doesn't validate enpf not 8
 #+end_src
 
 #+RESULTS: neighborhoods
@@ -166,12 +162,9 @@ MV =: {{ (+. m *. y&(|.!.0))^:_ n }} NB. moves
 ATK =: {{ n ~: y |.!.0 m MV n y }} NB. attacks (moves including possibly one piece)
 NB. y is source square, m is movement vector, x is bit brick
 NB. thus, in MV/ATK, n is source, m is clear squares, y is movement direction
-ATK1 =: {{ y |.!.0 n }} NB. attacks (moves including possibly one piece)
 M =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) MV y\ m }}
 A =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) ATK y\ m }}
 A1 =: 2 : '+./ (_2 ]\ m) |.!.0 y'
-NB. A1 =: {{ y ~: +./ _2 (y ~: -. +./^:2 x) ATK1 y\ m }} M1 =: {{ y ~:
-NB. +./ _2 (y ~: -. +./^:2 x) MV y\ m }} NB. move single square
 MB =: _1 _1 _1 1 1 _1 1 1 M NB. bishop
 AB =: _1 _1 _1 1 1 _1 1 1 A NB. bishop
 MR =: 0 _1 0 1 _1 0 1 0 M NB. rook
