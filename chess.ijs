@@ -24,9 +24,8 @@ i88 =: i. 8 8
 'IP IN IB IR IQ IK' =: i. 6
 coords =: 97 (,:|.)&(a.{~+&(i.8)) 49
 SQix =: [: |. coords&(i."1 0)
-
-movesto =: _2 {. -.&((6}.pieces),'+#=') NB. should be in algebraic notation section?
-SQ =: i88 = 8 #. SQix @: movesto
+SQt =: _2 {. -.&((6}.pieces),'+#=') NB. target square of SAN move
+SQ =: i88 = 8 #. SQix @: SQt
 
 NP =: (,-) 2 0,1,.i:1 NB. pawn (both black & white)
 NN =: ,/ (<:+:#:i.4) *"1/ >:=/~i.2 NB. knight
@@ -66,9 +65,8 @@ NB. x = 0 or 1 means king or queen sides resp, y is position
 OO =: 4 : 0
  'brd bw oo ep hm fm' =. y
  oo =. oo * (-+:<:+:bw) |.!.0 oo
- rw =. 7*bw
- k =. i88 = (8*rw)+6-4*x
- r =. i88 e. 8 #. rw,.5 7-x*5 4
+ k =. i88 = (56*bw)+6-4*x
+ r =. i88 e. (56*bw)+(5*-.x),(7-x*4)
  rm =. r ~: (<bw,IR) { brd
  brd =. (k,:rm)((<bw,IK),(<bw,IR))}brd
  brd;(-.bw);oo;ep;(hm+1);(fm+-.bw)
