@@ -65,6 +65,25 @@ pgn0 =: 0 : 0
 1. e4 d6 2. f4 Nf6 3. Nf3 Nxe4 4. Bc4 e6 5. O-O g6 6. d3 Nc5 7. a3 Bg7 8. c3 a6 9. d4 Ne4 10. Nbd2 Nxd2 11. Bxd2 O-O 12. Ng5 b5 13. Ba2 Nc6 14. Qf3 Bb7 15. Qh3 h6 16. Nf3 e5 17. fxe5 dxe5 18. Bxh6 exd4 19. Bxg7 Kxg7 20. Nxd4 Nxd4 21. cxd4 Qxd4+ 22. Kh1 Qxb2 23. Qd7 Qxg2# 0-1
 )
 
+NB. example tournament result matrix
+sbeg =: ".;._2 ] 0 : 0
+0 0.5 0.5 1 0.5 0.5 1 1 0.5  1  0.5  1  1  1  1
+0.5 0 0 0.5 1 0.5 1 1 1  0.5  1  1  1  1  1
+0.5 1 0 0.5 0.5 0.5 0.5 0.5 1  1  0.5  1  1  1  1
+0 0.5 0.5 0 0.5 1 0.5 0 1  1  0.5  1  0.5  1  0.5
+0.5 0 0.5 0.5 0 0.5 0.5 0.5 0.5  0  1  1  0.5  1  1
+0.5 0.5 0.5 0 0.5 0 0.5 0.5 0  1  0.5  0.5  0  1  1
+0 0 0.5 0.5 0.5 0.5 0 0.5 1  0  0.5  0.5  1  1  0.5
+0 0 0.5 1 0.5 0.5 0.5 0 0  0.5  1  0  1  0.5  1
+0.5 0 0 0 0.5 1 0 1 0  1  0.5  0.5  0.5  0.5  1
+0 0.5 0 0 1 0 1 0.5 0  0  1  1  1  0  1
+0.5 0 0.5 0.5 0 0.5 0.5 0 0.5  0  0  0  1  0.5  1
+0 0 0 0 0 0.5 0.5 1 0.5  0  1  0  0.5  0.5  1
+0 0 0 0.5 0.5 1 0 0 0.5  0  0  0.5  0  0.5  1
+0 0 0 0 0 0 0 0.5 0.5  1  0.5  0.5  0.5  0  1
+0 0 0 0.5 0 0 0.5 0 0  0  0  0  0  0  0
+)
+
 demos =: 0 : 0
 <"1 ,~"0/~/ coords NB. boxed coordinates
 )
@@ -125,6 +144,9 @@ NB. example bullet(s)
 '5rk1/pp3ppp/2p1p3/6P1/7P/b7/Kq6/1B1b4 w - - 0 33' -: fen _1 {:: game_of_pgn egblitz3
 '7r/3nk2p/p2p1p2/4pP2/2p4P/P3B3/1rP3q1/R1N1KR2 w Q - 0 25' -: fen _1 {::game_of_pgn egblitzchesscom
 '1qr3r1/5pBk/1p2pN1P/p1p1nnQ1/P2p4/2PP2PN/1P3PK1/R7 b - - 1 28' -: fen final_of_pgn egclassic
+
+NB. sonnenborn-berger
+69.5 66.75 67.5 54.75 47.75 45.25 42.5 41.5 41.5 40.5 33.25 28.5 24.75 22.75 7.75 -: S_B sbeg
 )
 
 0!:1 demos
@@ -132,3 +154,4 @@ NB. example bullet(s)
 
 (< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
 (< 'blitz.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egblitzchesscom
+

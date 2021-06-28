@@ -200,6 +200,11 @@ NB. remove abandoned?
 
 
 
+NB. tournament
+NB. S_B y -- monad where y is matrix of tournament results where y_ij
+NB. is result of game between player i and j.
+S_B =: +/ . * +/"1
+
 NB. fen_z_ =: fen_jchess_
 NB. print_z_ =: print_jchess_
 NB. san_z_ =: san_jchess_

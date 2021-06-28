@@ -476,6 +476,28 @@ On second thought, 2!:2 kinda sucks. Will use scheme for now.
 
 * Rating
 
+* Tournament Tie-breaks
+
+Results are usually scored as 0 for losses, 0.5 for draws, and 1 for wins.
+
+** Sonnenborn-Berger (Neustadtl)
+
+Tie breaker system. Conventional score is sum over results of 0.5 for
+draws and 1 for wins. Sonnenborn-Berger (abbrev ns) is second order
+sum over results, ie for each opponent you add their conventional
+score multiplied by the result.
+
+#+name: sonnenborn-berger
+#+begin_src J :session :exports both
+NB. S_B y -- monad where y is matrix of tournament results where y_ij
+NB. is result of game between player i and j.
+S_B =: +/ . * +/"1
+#+end_src
+
+** Koya
+
+Koya system for tie breaking is number of wins against opponents who
+have won more than 50% (customizable param) of their games.
 
 * Final program
 
@@ -506,8 +528,12 @@ NB. pgn, obvi
 
 <<db>>
 
+NB. tournament
+<<sonnenborn-berger>>
+
 NB. fen_z_ =: fen_jchess_
 NB. print_z_ =: print_jchess_
 NB. san_z_ =: san_jchess_
 NB. start_z_ =: start_jchess_
 #+end_src
+
