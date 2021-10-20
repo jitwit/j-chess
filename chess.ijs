@@ -135,6 +135,22 @@ san =: 4 : 0
  end.
 )
 
+NB. convert lan to san
+
+lan =: 4 : 0
+  brd =. 0 {:: y
+  select. p =. {.,I.+./"1+./ (SQ 2{.x) (,@:*)"2 brd
+  case. IP do. 2}.x NB. todo: captures/enpassant/promotion/etc
+  case. IN do. 'N',2}.x NB. todo: disambiguation
+  case. IB do. 'B',2}.x NB. todo: disambiguation
+  case. IR do. 'R',2}.x NB. todo: disambiguation
+  case. IQ do. 'Q',2}.x NB. todo: disambiguation
+  case. IK do. 'K',2}.x NB. todo: castling
+  end.
+)
+
+'g1f3' lan start
+
 NB. fen, obvi
 NB. FEN helpers
 rleb =: (0&{::#1&{::)`([:":0&{::)@.('.'-:1&{::)

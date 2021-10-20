@@ -155,3 +155,4 @@ NB. sonnenborn-berger
 (< 'rapid.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egrapid
 (< 'blitz.txt') 1!:2~ ;(LF ,~ fen) &.> game_of_pgn egblitzchesscom
 
+pgn_moves 'f4 d5 Nf3 Nf6 g3 g6 Bg2 Bg7 O-O O-O d3 c5'

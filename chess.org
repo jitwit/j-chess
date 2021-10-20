@@ -346,6 +346,47 @@ For example some Blackmar-Diemer-Ryder:
 └─┴─┴─┴─┴─┴─┴─┴─┘
 #+end_example
 
+** LAN mostrosity
+
+#+name: lan-monstrosity
+#+begin_src J :session :exports both :verb 0!:1
+NB. convert lan to san
+
+lan =: 4 : 0
+  brd =. 0 {:: y
+  select. p =. {.,I.+./"1+./ (SQ 2{.x) (,@:*)"2 brd
+  case. IP do. 2}.x NB. todo: captures/enpassant/promotion/etc
+  case. IN do. 'N',2}.x NB. todo: disambiguation
+  case. IB do. 'B',2}.x NB. todo: disambiguation
+  case. IR do. 'R',2}.x NB. todo: disambiguation
+  case. IQ do. 'Q',2}.x NB. todo: disambiguation
+  case. IK do. 'K',2}.x NB. todo: castling
+  end.
+)
+
+'g1f3' lan start
+#+end_src
+
+#+RESULTS: lan-monstrosity
+#+begin_example
+   NB. convert lan to san
+   
+   lan =: 4 : 0
+  brd =. 0 {:: y
+  select. p =. {.,I.+./"1+./ (SQ 2{.x) (,@:*)"2 brd
+  case. IP do. 2}.x NB. todo: captures/enpassant/promotion/etc
+  case. IN do. 'N',2}.x NB. todo: disambiguation
+  case. IB do. 'B',2}.x NB. todo: disambiguation
+  case. IR do. 'R',2}.x NB. todo: disambiguation
+  case. IQ do. 'Q',2}.x NB. todo: disambiguation
+  case. IK do. 'K',2}.x NB. todo: castling
+  end.
+)
+   
+   'g1f3' lan start
+Nf3
+#+end_example
+
 * PGN
 
 Need to figure out all what I'd like to be able to do with pgns, but
@@ -519,6 +560,8 @@ NB. algebraic notation
 <<castling>>
 
 <<san-monstrosity>>
+
+<<lan-monstrosity>>
 
 NB. fen, obvi
 <<fen>>
