@@ -135,21 +135,38 @@ san =: 4 : 0
  end.
 )
 
-NB. convert lan to san
-
-lan =: 4 : 0
-  brd =. 0 {:: y
-  select. p =. {.,I.+./"1+./ (SQ 2{.x) (,@:*)"2 brd
-  case. IP do. 2}.x NB. todo: captures/enpassant/promotion/etc
-  case. IN do. 'N',2}.x NB. todo: disambiguation
-  case. IB do. 'B',2}.x NB. todo: disambiguation
-  case. IR do. 'R',2}.x NB. todo: disambiguation
-  case. IQ do. 'Q',2}.x NB. todo: disambiguation
-  case. IK do. 'K',2}.x NB. todo: castling
-  end.
+uci =: 4 : 0
+ NB. x is uci notated move y is board, result is new board
+ 'brd bw oo ep hm fm' =. y
+ 'sqs sqt' =. _2 SQ\ 4{.x
+ p =. {.,I.+./ sqs (+./@:,@:*.)"2 brd
+ if. ('eg'-:0 2{x)*.p=IK do. O_O y
+ elseif. ('ec'-:0 2{x)*.p=IK do. O_O_O y
+ else. pt =. p <. ('pnbrqk' i. {:x)*(IP=p)*.5=#x NB. p or promotion if there is one
+       cap =. +./,sqt *."2 brd NB. detect if capture
+       brd0 =. sqt (<bw,pt)}brd *."2 -.sqs+.sqt NB. clear squares
+       fm =. fm+-.bw [ hm =. (hm+1) * -. (p=0) +. cap
+       NB. todo: detect castling rights loss, en passant possibility
+       brd0;(-.bw);oo;ep;fm;hm
+ end.
 )
 
-'g1f3' lan start
+san_of_uci =: 4 : 0
+ NB. x is uci notated move y is board, result is overdisambiguated san notation
+  select. p=.{.,I.+./ (SQ 2{.x) (+./@:,@:*)"2 (0{::y)
+  case. IP do. if. 5=#y do. (4}.x),'=',{:x else. x end.
+  case. IK do. select. 0 2 { x
+               case. 'eg' do. 'O-O'
+	       case. 'ec' do. 'O-O-O'
+	       case. do. 'K',x
+	       end.
+  case. do. (p{'PNBRQK'),x
+  end.
+)
+'e2e4' uci start
+'g1f3' san_of_uci start
+'e1c1' san_of_uci start
+'e8g8' san_of_uci start
 
 NB. fen, obvi
 NB. FEN helpers
