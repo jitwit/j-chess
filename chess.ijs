@@ -229,6 +229,15 @@ game_of_pgn =: 3 : 0
  end.
 )
 
+game_of_uci =: 3 : 0
+ fens =. < brd =. start
+ for_move. y do.
+   fens =. fens,<brd =. (>move) uci brd
+ end.
+)
+
+
+
 NB. take pgn movetext and return final position
 final_of_pgn =: 3 : 0
  for_move. moves =. pgn_moves y [ brd =. start do. brd =. (>move) san brd end. brd
