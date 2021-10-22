@@ -142,12 +142,17 @@ uci =: 4 : 0
  p =. {.,I.+./ sqs (+./@:,@:*.)"2 brd
  if. ('eg'-:0 2{x)*.p=IK do. O_O y
  elseif. ('ec'-:0 2{x)*.p=IK do. O_O_O y
- else. pt =. p <. ('pnbrqk' i. {:x)*(IP=p)*.5=#x NB. p or promotion if there is one
+ else. pt =. p >. ('pnbrqk' i. {:x)*(IP=p)*.5=#x NB. p or promotion if there is one
        cap =. +./,sqt *."2 brd NB. detect if capture
-       brd0 =. sqt (<bw,pt)}brd *."2 -.sqs+.sqt NB. clear squares
+       new =. (-.sqs)*.sqt+.(<bw,pt){brd
+       brd0 =. new (<bw,pt)}brd *."2 -.sqs+.sqt NB. clear squares
        fm =. fm+-.bw [ hm =. (hm+1) * -. (p=0) +. cap
-       NB. todo: detect castling rights loss, en passant possibility
-       brd0;(-.bw);oo;ep;fm;hm
+       oo =. oo*-.,_3(2+./\])\OO_sqs{+./^:2 brd~:brd0 NB. detect castling rights loss
+       ep =. 8
+       NB. todo: en passant. todo: en passant capture.
+       NB. if moved two, if neighboring opp pawn, then yes
+       
+       brd0;(-.bw);oo;ep;hm;fm
  end.
 )
 
@@ -163,8 +168,8 @@ san_of_uci =: 4 : 0
   case. do. (p{'PNBRQK'),x
   end.
 )
-'e2e4' uci start
-'g1f3' san_of_uci start
+display 'e4' san start
+display 'g1f3' uci start
 'e1c1' san_of_uci start
 'e8g8' san_of_uci start
 
