@@ -179,10 +179,6 @@ san_of_uci =: 4 : 0
   case. do. (p{'PNBRQK'),x
   end.
 )
-display 'e4' san start
-display 'g1f3' uci start
-'e1c1' san_of_uci start
-'e8g8' san_of_uci start
 
 NB. fen, obvi
 NB. FEN helpers
