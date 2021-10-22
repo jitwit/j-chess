@@ -121,9 +121,10 @@ san =: 4 : 0
          ep =. 8 NB. no en passant when capturing
      else.
       is2 =. -.(<bw,0,dz+xy){brd NB. if no pawn was a 2 step move
-      epc =. *./ , to *. +./ _1 1 |.!.0"0 1/ (<(-.bw),IP){brd
+      epc =. +./ , to *. +./ _1 1 |.!.0"0 1/ (<(-.bw),IP){brd
       src =. i88 = 8#.xy+dz+is2*dz NB. source square
-      ep =. (epc*.is2){8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
+
+            ep =. (epc*.is2){8,{:xy NB. en passant if moved 2 on file ({:xy), else 8
       brd =. ((-.src)*.to+.(<bw,p){brd) (<bw,p)} brd*."2-.src
      end.
      if. '=' e. x NB. promotion
@@ -143,15 +144,26 @@ uci =: 4 : 0
  if. ('eg'-:0 2{x)*.p=IK do. O_O y
  elseif. ('ec'-:0 2{x)*.p=IK do. O_O_O y
  else. pt =. p >. ('pnbrqk' i. {:x)*(IP=p)*.5=#x NB. p or promotion if there is one
-       cap =. +./,sqt *."2 brd NB. detect if capture
        new =. (-.sqs)*.sqt+.(<bw,pt){brd
-       brd0 =. new (<bw,pt)}brd *."2 -.sqs+.sqt NB. clear squares
-       fm =. fm+-.bw [ hm =. (hm+1) * -. (p=0) +. cap
+       if. p=0 do. NB. pawn
+         dz =. 0,~<:+:bw
+         ept =. ep ,~ 2 + 3 * 1 - bw
+         xy =. SQix 2 3 { x
+         if. ~:/0 2{x do. NB. capture
+          capenp =. (xy-:ept) *. i88 = 8#.xy+dz
+	  cap =. 1 [ brd0 =. new (<bw,pt)}brd *."2 -.sqs+.sqt+.capenp
+          ep =. 8
+         else. NB. non capture
+          cap =. 0 [ brd0 =. new (<bw,pt)}brd *."2 -.sqs+.sqt
+          adj =. +./ (<"1 xy+"1]0,._1 1) { (<(-.bw),0){brd
+	  ep =. (adj*2=|-/"."0(1 3{x)) { 8,{:xy
+         end.
+       else. ep =. 8 NB. piece
+             brd0 =. new (<bw,pt)}brd *."2 -.sqs+.sqt
+	     cap =. +./,sqt *."2 brd NB. detect if capture
+       end.
        oo =. oo*-.,_3(2+./\])\OO_sqs{+./^:2 brd~:brd0 NB. detect castling rights loss
-       ep =. 8
-       NB. todo: en passant. todo: en passant capture.
-       NB. if moved two, if neighboring opp pawn, then yes
-       
+       fm =. fm+-.bw [ hm =. (hm+1) * -. (p=0) +. cap
        brd0;(-.bw);oo;ep;hm;fm
  end.
 )
