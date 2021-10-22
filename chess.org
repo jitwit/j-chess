@@ -667,9 +667,12 @@ NB. pgn, obvi
 NB. tournament
 <<sonnenborn-berger>>
 
-NB. fen_z_ =: fen_jchess_
-NB. print_z_ =: print_jchess_
-NB. san_z_ =: san_jchess_
-NB. start_z_ =: start_jchess_
+fen_z_ =: fen_jchess_
+san_z_ =: san_jchess_
+uci_z_ =: uci_jchess_
+chess_0_z_ =: start_jchess_
+display_z_ =: display_jchess_
+game_of_pgn_z_ =: game_of_pgn_jchess_
+game_of_uci_z_ =: game_of_uci_jchess_
 #+end_src
 

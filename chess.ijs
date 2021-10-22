@@ -236,8 +236,6 @@ game_of_uci =: 3 : 0
  end.
 )
 
-
-
 NB. take pgn movetext and return final position
 final_of_pgn =: 3 : 0
  for_move. moves =. pgn_moves y [ brd =. start do. brd =. (>move) san brd end. brd
@@ -263,7 +261,10 @@ NB. S_B y -- monad where y is matrix of tournament results where y_ij
 NB. is result of game between player i and j.
 S_B =: +/ . * +/"1
 
-NB. fen_z_ =: fen_jchess_
-NB. print_z_ =: print_jchess_
-NB. san_z_ =: san_jchess_
-NB. start_z_ =: start_jchess_
+fen_z_ =: fen_jchess_
+san_z_ =: san_jchess_
+uci_z_ =: uci_jchess_
+chess_0_z_ =: start_jchess_
+display_z_ =: display_jchess_
+game_of_pgn_z_ =: game_of_pgn_jchess_
+game_of_uci_z_ =: game_of_uci_jchess_
