@@ -261,6 +261,7 @@ NB. S_B y -- monad where y is matrix of tournament results where y_ij
 NB. is result of game between player i and j.
 S_B =: +/ . * +/"1
 
+NB. z defs
 fen_z_ =: fen_jchess_
 san_z_ =: san_jchess_
 uci_z_ =: uci_jchess_

@@ -1,0 +1,17 @@
+1. e4 {[%timestamp 1]} 1... c5 {[%timestamp 1]} 2. Nf3 {[%timestamp 17]} 2... d6
+{[%timestamp 19]} 3. d4 {[%timestamp 7]} 3... cxd4 {[%timestamp 25]} 4. Nxd4
+{[%timestamp 1]} 4... Nf6 {[%timestamp 15]} 5. Nc3 {[%timestamp 9]} 5... a6
+{[%timestamp 12]} 6. Be3 {[%timestamp 28]} 6... e5 {[%timestamp 19]} 7. Nb3
+{[%timestamp 56]} 7... Be7 {[%timestamp 58]} 8. f3 {[%timestamp 18]} 8... Be6
+{[%timestamp 37]} 9. Qd2 {[%timestamp 28]} 9... Nbd7 {[%timestamp 72]} 10. Be2
+{[%timestamp 54]} 10... Qc7 {[%timestamp 21]} 11. g4 {[%timestamp 26]} 11... b5
+{[%timestamp 63]} 12. a3 {[%timestamp 19]} 12... Rc8 {[%timestamp 53]} 13. h4
+{[%timestamp 67]} 13... Nb6 {[%timestamp 40]} 14. g5 {[%timestamp 278]} 14...
+Nfd7 {[%timestamp 105]} 15. f4 {[%timestamp 51]} 15... Nc4 {[%timestamp 81]} 16.
+Bxc4 {[%timestamp 90]} 16... bxc4 {[%timestamp 1]} 17. Nc1 {[%timestamp 333]}
+17... Rb8 {[%timestamp 49]} 18. f5 {[%timestamp 143]} 18... Bxf5 {[%timestamp
+147]} 19. exf5 {[%timestamp 1]} 19... Rxb2 {[%timestamp 16]} 20. Nd5
+{[%timestamp 83]} 20... Qb7 {[%timestamp 150]} 21. Rf1 {[%timestamp 249]} 21...
+f6 {[%timestamp 273]} 22. Nxe7 {[%timestamp 44]} 22... Kxe7 {[%timestamp 23]}
+23. gxf6+ {[%timestamp 16]} 23... gxf6 {[%timestamp 72]} 24. Qg2 {[%timestamp
+107]} 24... Qxg2 {[%timestamp 69]} 0-1
